@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ScoutD3 - NCAA Division III Multi-Sport Opponent Scouting Report Generation System" />
+  <meta name="keywords" content="NCAA, Division III, scouting, sports analytics, basketball, soccer, lacrosse, volleyball, baseball, softball" />
+  <meta name="author" content="Taylor Hunter" />
+  
+  <!-- Accessibility meta tags -->
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#1e40af" />
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ScoutD3 - NCAA Division III Scouting System" />
+  <meta property="og:description" content="Automated opponent scouting report generation for NCAA Division III athletics" />
+  <meta property="og:site_name" content="ScoutD3" />
+  
+  <!-- Accessibility features -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/basketball.svg" />
+  
+  <!-- Skip navigation styles -->
+  <style>
+    .skip-nav {
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      z-index: 100;
+      padding: 8px;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: top 0.3s;
+    }
+    
+    .skip-nav:focus {
+      top: 6px;
+    }
+    
+    /* Initial loading state */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .loading-content {
+      text-align: center;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid #1e40af;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      .loading-spinner {
+        animation: none;
+        border-top-color: #1e40af;
+      }
+    }
+  </style>
+  
+  <title>ScoutD3 - NCAA Division III Scouting System</title>
+</head>
+<body>
+  <!-- Skip navigation link -->
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  
+  <!-- Loading screen -->
+  <div id="loading-screen" aria-label="Loading ScoutD3 application">
+    <div class="loading-content">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p>Loading ScoutD3...</p>
+      <noscript>
+        <p style="color: #dc2626; margin-top: 16px;">
+          JavaScript is required to run this application. Please enable JavaScript in your browser.
+        </p>
+      </noscript>
+    </div>
+  </div>
+  
+  <!-- Main application root -->
+  <div id="root"></div>
+  
+  <!-- No JavaScript fallback -->
+  <noscript>
+    <div style="padding: 40px; text-align: center; font-family: 'Inter', sans-serif;">
+      <h1>ScoutD3 - NCAA Division III Scouting System</h1>
+      <p>This application requires JavaScript to function properly.</p>
+      <p>Please enable JavaScript in your browser and reload the page.</p>
+      
+      <h2>System Requirements:</h2>
+      <ul style="text-align: left; max-width: 400px; margin: 20px auto;">
+        <li>Modern web browser (Chrome, Firefox, Safari, Edge)</li>
+        <li>JavaScript enabled</li>
+        <li>Internet connection for data updates</li>
+      </ul>
+      
+      <h2>Accessibility Features:</h2>
+      <ul style="text-align: left; max-width: 400px; margin: 20px auto;">
+        <li>WCAG 2.1 AA compliant</li>
+        <li>Screen reader compatible</li>
+        <li>Keyboard navigation support</li>
+        <li>High contrast mode available</li>
+        <li>Adjustable text sizing</li>
+      </ul>
+      
+      <p>For technical support, please contact the system administrator.</p>
+    </div>
+  </noscript>
+  
+  <!-- Application script -->
+  <script type="module" src="/src/main.tsx"></script>
+  
+  <!-- Remove loading screen once React app loads -->
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          loadingScreen.style.display = 'none';
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

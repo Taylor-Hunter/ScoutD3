@@ -1,0 +1,413 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles */
+:root {
+  --font-scale: 1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: calc(16px * var(--font-scale));
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Skip navigation styles */
+.skip-nav-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  z-index: 100;
+  padding: 8px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: top 0.3s;
+}
+
+.skip-nav-link:focus {
+  top: 6px;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+.reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Loading spinner */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Custom component styles */
+.card {
+  @apply bg-white shadow rounded-lg;
+}
+
+.btn-primary {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+/* Normal mode definition tuning (only when dark mode and high contrast are off). */
+html:not(.dark-mode):not(.high-contrast) body {
+  background-color: #f3f4f6;
+}
+
+html:not(.dark-mode):not(.high-contrast) main :where(
+  .bg-white.shadow.rounded-lg,
+  .bg-white.rounded-lg,
+  .bg-gray-50.rounded-lg,
+  .bg-indigo-50.rounded-lg,
+  .bg-yellow-50.rounded-lg
+) {
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+html:not(.dark-mode):not(.high-contrast) main :where(.max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl) > div + div {
+  border-top: 1px solid #cbd5e1;
+  padding-top: 1rem;
+}
+
+html:not(.dark-mode):not(.high-contrast) input[type='text'],
+html:not(.dark-mode):not(.high-contrast) input[type='search'],
+html:not(.dark-mode):not(.high-contrast) input[type='email'],
+html:not(.dark-mode):not(.high-contrast) input[type='password'],
+html:not(.dark-mode):not(.high-contrast) select,
+html:not(.dark-mode):not(.high-contrast) textarea {
+  border-color: #9ca3af !important;
+  background-color: #ffffff !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+html:not(.dark-mode):not(.high-contrast) input[type='text']:focus,
+html:not(.dark-mode):not(.high-contrast) input[type='search']:focus,
+html:not(.dark-mode):not(.high-contrast) input[type='email']:focus,
+html:not(.dark-mode):not(.high-contrast) input[type='password']:focus,
+html:not(.dark-mode):not(.high-contrast) select:focus,
+html:not(.dark-mode):not(.high-contrast) textarea:focus {
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18), inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+/* Dark mode overrides */
+.dark-mode {
+  color-scheme: dark;
+}
+
+.dark-mode body {
+  background-color: #0b1220;
+  color: #e5e7eb;
+}
+
+/* Dark mode definition tuning (when high contrast is off). */
+html.dark-mode:not(.high-contrast) main :where(
+  .bg-white.shadow.rounded-lg,
+  .bg-white.rounded-lg,
+  .bg-gray-50.rounded-lg,
+  .bg-indigo-50.rounded-lg,
+  .bg-yellow-50.rounded-lg,
+  .rounded-lg.border,
+  .rounded-md.border
+) {
+  border: 1px solid #334155;
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.28), 0 10px 24px rgba(2, 6, 23, 0.35);
+}
+
+html.dark-mode:not(.high-contrast) main :where(.max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl) > div + div {
+  border-top: 1px solid #334155;
+  padding-top: 1rem;
+}
+
+html.dark-mode:not(.high-contrast) input[type='text'],
+html.dark-mode:not(.high-contrast) input[type='search'],
+html.dark-mode:not(.high-contrast) input[type='email'],
+html.dark-mode:not(.high-contrast) input[type='password'],
+html.dark-mode:not(.high-contrast) select,
+html.dark-mode:not(.high-contrast) textarea {
+  border-color: #64748b !important;
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+  box-shadow: inset 0 1px 2px rgba(2, 6, 23, 0.45);
+}
+
+html.dark-mode:not(.high-contrast) input[type='text']:focus,
+html.dark-mode:not(.high-contrast) input[type='search']:focus,
+html.dark-mode:not(.high-contrast) input[type='email']:focus,
+html.dark-mode:not(.high-contrast) input[type='password']:focus,
+html.dark-mode:not(.high-contrast) select:focus,
+html.dark-mode:not(.high-contrast) textarea:focus {
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.22), inset 0 1px 2px rgba(2, 6, 23, 0.45);
+}
+
+.dark-mode .bg-white {
+  background-color: #111827 !important;
+}
+
+.dark-mode .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+.dark-mode .bg-gray-100 {
+  background-color: #111827 !important;
+}
+
+.dark-mode .bg-yellow-50 {
+  background-color: #3f2f11 !important;
+}
+
+.dark-mode .bg-indigo-50 {
+  background-color: #1e1b4b !important;
+}
+
+.dark-mode .text-gray-900 {
+  color: #f3f4f6 !important;
+}
+
+.dark-mode .text-gray-800 {
+  color: #e5e7eb !important;
+}
+
+.dark-mode .text-gray-700,
+.dark-mode .text-gray-600,
+.dark-mode .text-gray-500,
+.dark-mode .text-gray-400 {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .text-yellow-800,
+.dark-mode .text-yellow-700 {
+  color: #fcd34d !important;
+}
+
+.dark-mode .border-gray-100,
+.dark-mode .border-gray-200,
+.dark-mode .border-gray-300 {
+  border-color: #334155 !important;
+}
+
+.dark-mode header,
+.dark-mode footer,
+.dark-mode main,
+.dark-mode nav {
+  color: #e5e7eb;
+}
+
+.dark-mode a {
+  color: #93c5fd;
+}
+
+.dark-mode #accessibility-panel {
+  background-color: #111827;
+  color: #e5e7eb;
+}
+
+.dark-mode #accessibility-panel .text-gray-900 {
+  color: #f3f4f6 !important;
+}
+
+.dark-mode #accessibility-panel .text-gray-700,
+.dark-mode #accessibility-panel .text-gray-500 {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode #accessibility-panel .border-gray-200 {
+  border-color: #334155 !important;
+}
+
+.dark-mode .homepage-shell {
+  background: linear-gradient(135deg, #0b1220 0%, #172554 55%, #111827 100%) !important;
+}
+
+.dark-mode .homepage-hero-title,
+.dark-mode .homepage-hero-title .text-indigo-600 {
+  color: #f8fafc !important;
+}
+
+.dark-mode .homepage-hero-subtitle {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .homepage-hero-copy {
+  color: #dbeafe !important;
+}
+
+.dark-mode .homepage-hero-note {
+  background-color: rgba(30, 41, 59, 0.92) !important;
+  border-color: #f59e0b !important;
+  color: #fde68a !important;
+}
+
+.dark-mode .homepage-stats .text-indigo-600 {
+  color: #93c5fd !important;
+}
+
+/* Analytics & comparison color palette overrides for dark mode (no high contrast). */
+html.dark-mode:not(.high-contrast) .bg-blue-50 {
+  background-color: #1e293b !important;
+}
+html.dark-mode:not(.high-contrast) .bg-orange-50 {
+  background-color: #2a1d10 !important;
+}
+html.dark-mode:not(.high-contrast) .bg-green-50 {
+  background-color: #0f2a1a !important;
+}
+html.dark-mode:not(.high-contrast) .bg-emerald-50 {
+  background-color: #0f2a22 !important;
+}
+html.dark-mode:not(.high-contrast) .bg-purple-50 {
+  background-color: #221a3a !important;
+}
+html.dark-mode:not(.high-contrast) .bg-red-50 {
+  background-color: #2a1414 !important;
+}
+html.dark-mode:not(.high-contrast) .bg-slate-100 {
+  background-color: #0f172a !important;
+}
+html.dark-mode:not(.high-contrast) .bg-blue-100 {
+  background-color: #1e3a8a !important;
+}
+html.dark-mode:not(.high-contrast) .bg-orange-100 {
+  background-color: #7c2d12 !important;
+}
+
+html.dark-mode:not(.high-contrast) .text-blue-600,
+html.dark-mode:not(.high-contrast) .text-blue-700,
+html.dark-mode:not(.high-contrast) .text-blue-800,
+html.dark-mode:not(.high-contrast) .text-blue-900 {
+  color: #bfdbfe !important;
+}
+html.dark-mode:not(.high-contrast) .text-orange-600,
+html.dark-mode:not(.high-contrast) .text-orange-700,
+html.dark-mode:not(.high-contrast) .text-orange-800,
+html.dark-mode:not(.high-contrast) .text-orange-900 {
+  color: #fed7aa !important;
+}
+html.dark-mode:not(.high-contrast) .text-emerald-600,
+html.dark-mode:not(.high-contrast) .text-emerald-700,
+html.dark-mode:not(.high-contrast) .text-emerald-800,
+html.dark-mode:not(.high-contrast) .text-emerald-900 {
+  color: #a7f3d0 !important;
+}
+html.dark-mode:not(.high-contrast) .text-green-600,
+html.dark-mode:not(.high-contrast) .text-green-700,
+html.dark-mode:not(.high-contrast) .text-green-800 {
+  color: #86efac !important;
+}
+html.dark-mode:not(.high-contrast) .text-purple-600,
+html.dark-mode:not(.high-contrast) .text-purple-700,
+html.dark-mode:not(.high-contrast) .text-purple-800,
+html.dark-mode:not(.high-contrast) .text-purple-900 {
+  color: #ddd6fe !important;
+}
+html.dark-mode:not(.high-contrast) .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+/* Tailwind translucent white panels (bg-white/50, /60, /70, /80) appear as
+   pale beige inside the colored Analytics cards in dark mode. Replace with a
+   raised slate fill so the inner tiles read as cards on a dark background. */
+html.dark-mode:not(.high-contrast) [class*='bg-white\\/'],
+html.dark-mode:not(.high-contrast) [class~='bg-white/50'],
+html.dark-mode:not(.high-contrast) [class~='bg-white/60'],
+html.dark-mode:not(.high-contrast) [class~='bg-white/70'],
+html.dark-mode:not(.high-contrast) [class~='bg-white/80'] {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Full Season Statistics gradient tiles use bg-gradient-to-br from-X-50 to-X-100
+   which sets --tw-gradient-from/to and overrides plain bg-* overrides above.
+   Force a solid dark slate fill for these tiles in dark mode. */
+html.dark-mode:not(.high-contrast) .analytics-stat-tile {
+  background-image: none !important;
+  background-color: #1e293b !important;
+}
+
+/* TeamDetails action bar wrapper (bg-slate-50) and other slate-50 panels. */
+html.dark-mode:not(.high-contrast) .bg-slate-50 {
+  background-color: #0f172a !important;
+}
+
+/* Indigo-50 inline panels (e.g. Help/info boxes). */
+html.dark-mode:not(.high-contrast) .bg-indigo-50 {
+  background-color: #1e1b4b !important;
+}
+html.dark-mode:not(.high-contrast) .text-indigo-600,
+html.dark-mode:not(.high-contrast) .text-indigo-700,
+html.dark-mode:not(.high-contrast) .text-indigo-800,
+html.dark-mode:not(.high-contrast) .text-indigo-900 {
+  color: #c7d2fe !important;
+}
+
+/* Reports page status badges (bg-green-100 / bg-yellow-100 / bg-red-100 pills). */
+html.dark-mode:not(.high-contrast) .bg-green-100 {
+  background-color: #14532d !important;
+}
+html.dark-mode:not(.high-contrast) .bg-yellow-100 {
+  background-color: #713f12 !important;
+}
+html.dark-mode:not(.high-contrast) .bg-red-100 {
+  background-color: #7f1d1d !important;
+}
+html.dark-mode:not(.high-contrast) .text-yellow-600,
+html.dark-mode:not(.high-contrast) .text-yellow-700,
+html.dark-mode:not(.high-contrast) .text-yellow-800 {
+  color: #fde68a !important;
+}
+html.dark-mode:not(.high-contrast) .text-red-600,
+html.dark-mode:not(.high-contrast) .text-red-700,
+html.dark-mode:not(.high-contrast) .text-red-800 {
+  color: #fecaca !important;
+}

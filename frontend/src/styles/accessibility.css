@@ -1,0 +1,1460 @@
+/* 
+ * ScoutD3 Accessibility Styles
+ * WCAG 2.1 AA Compliant Styling
+ */
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.high-contrast,
+.high-contrast.dark-mode {
+  --focus-ring: #ffbf47;
+  color-scheme: light;
+}
+
+.high-contrast body,
+.high-contrast.dark-mode body {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.high-contrast main,
+.high-contrast footer,
+.high-contrast .min-h-screen,
+.high-contrast.dark-mode main,
+.high-contrast.dark-mode footer,
+.high-contrast.dark-mode .min-h-screen {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* Global section delineation for high-contrast readability across all pages. */
+.high-contrast main .bg-white,
+.high-contrast main .bg-gray-50,
+.high-contrast main .bg-gray-100,
+.high-contrast main .bg-indigo-50,
+.high-contrast main .bg-blue-50,
+.high-contrast main .bg-green-50,
+.high-contrast main .bg-yellow-50,
+.high-contrast main .bg-red-50,
+.high-contrast main .bg-slate-50,
+.high-contrast main .bg-orange-50,
+.high-contrast main .bg-emerald-50,
+.high-contrast main .bg-purple-50,
+.high-contrast main .bg-cyan-50,
+.high-contrast main .bg-pink-50,
+.high-contrast main .bg-amber-50,
+.high-contrast main .bg-rose-50,
+.high-contrast main .bg-lime-50,
+.high-contrast main .bg-sky-50,
+.high-contrast.dark-mode main .bg-white,
+.high-contrast.dark-mode main .bg-gray-50,
+.high-contrast.dark-mode main .bg-gray-100,
+.high-contrast.dark-mode main .bg-indigo-50,
+.high-contrast.dark-mode main .bg-blue-50,
+.high-contrast.dark-mode main .bg-green-50,
+.high-contrast.dark-mode main .bg-yellow-50,
+.high-contrast.dark-mode main .bg-red-50,
+.high-contrast.dark-mode main .bg-slate-50,
+.high-contrast.dark-mode main .bg-orange-50,
+.high-contrast.dark-mode main .bg-emerald-50,
+.high-contrast.dark-mode main .bg-purple-50,
+.high-contrast.dark-mode main .bg-cyan-50,
+.high-contrast.dark-mode main .bg-pink-50,
+.high-contrast.dark-mode main .bg-amber-50,
+.high-contrast.dark-mode main .bg-rose-50,
+.high-contrast.dark-mode main .bg-lime-50,
+.high-contrast.dark-mode main .bg-sky-50 {
+  border: 2px solid #000 !important;
+}
+
+.high-contrast main .max-w-7xl > div + div,
+.high-contrast main .max-w-6xl > div + div,
+.high-contrast main .max-w-5xl > div + div,
+.high-contrast main .max-w-4xl > div + div,
+.high-contrast.dark-mode main .max-w-7xl > div + div,
+.high-contrast.dark-mode main .max-w-6xl > div + div,
+.high-contrast.dark-mode main .max-w-5xl > div + div,
+.high-contrast.dark-mode main .max-w-4xl > div + div {
+  border-top: 2px solid #9ca3af !important;
+  padding-top: 1rem;
+}
+
+  .high-contrast .bg-white,
+  .high-contrast .bg-gray-50,
+  .high-contrast .bg-gray-100,
+  .high-contrast .bg-gray-200,
+  .high-contrast .bg-slate-50,
+  .high-contrast .bg-slate-100,
+  .high-contrast .bg-indigo-50,
+  .high-contrast .bg-blue-50,
+  .high-contrast .bg-green-50,
+  .high-contrast .bg-yellow-50,
+  .high-contrast .bg-red-50,
+  .high-contrast .bg-orange-50,
+  .high-contrast .bg-purple-50,
+  .high-contrast .bg-cyan-50,
+  .high-contrast .bg-pink-50,
+  .high-contrast .bg-amber-50,
+  .high-contrast .bg-rose-50,
+  .high-contrast .bg-lime-50,
+  .high-contrast .bg-sky-50,
+  .high-contrast .bg-indigo-100,
+  .high-contrast .bg-blue-100,
+  .high-contrast .bg-green-100,
+  .high-contrast .bg-yellow-100,
+  .high-contrast .bg-red-100,
+  .high-contrast .bg-orange-100,
+  .high-contrast .bg-purple-100,
+  .high-contrast .bg-cyan-100,
+  .high-contrast .bg-pink-100,
+  .high-contrast .bg-amber-100,
+  .high-contrast .bg-rose-100,
+  .high-contrast .bg-lime-100,
+  .high-contrast .bg-sky-100 {
+    background: #fff !important;
+  }
+
+  .high-contrast .bg-gray-900,
+  .high-contrast .bg-gray-800,
+  .high-contrast .bg-gray-700,
+  .high-contrast .bg-slate-900,
+  .high-contrast .bg-slate-800,
+  .high-contrast .bg-slate-700,
+  .high-contrast .bg-indigo-600,
+  .high-contrast .bg-blue-600,
+  .high-contrast .bg-red-600,
+  .high-contrast .bg-green-600,
+  .high-contrast .bg-yellow-600,
+  .high-contrast .bg-orange-500,
+  .high-contrast .bg-purple-500,
+  .high-contrast .bg-blue-500,
+  .high-contrast .bg-green-500,
+  .high-contrast .bg-indigo-500 {
+    background: #fff !important;
+  }
+
+  /* Keep navigation intentionally dark for visual contrast with yellow icons. */
+  .high-contrast nav,
+  .high-contrast nav.bg-gray-900,
+  .high-contrast nav .bg-gray-900,
+  .high-contrast nav .bg-gray-800,
+  .high-contrast nav .bg-gray-700 {
+    background: #000 !important;
+  }
+
+  .high-contrast [class*='bg-gradient'],
+  .high-contrast [class*='from-'],
+  .high-contrast [class*='via-'],
+  .high-contrast [class*='to-'] {
+    background-image: none !important;
+  }
+
+  .high-contrast .text-gray-100,
+  .high-contrast .text-gray-200,
+  .high-contrast .text-gray-300,
+  .high-contrast .text-gray-400,
+  .high-contrast .text-gray-500,
+  .high-contrast .text-gray-600,
+  .high-contrast .text-gray-700,
+  .high-contrast .text-gray-800,
+  .high-contrast .text-gray-900,
+  .high-contrast .text-blue-500,
+  .high-contrast .text-blue-600,
+  .high-contrast .text-blue-700,
+  .high-contrast .text-blue-800,
+  .high-contrast .text-indigo-500,
+  .high-contrast .text-indigo-600,
+  .high-contrast .text-indigo-700,
+  .high-contrast .text-indigo-800,
+  .high-contrast .text-green-500,
+  .high-contrast .text-green-600,
+  .high-contrast .text-green-700,
+  .high-contrast .text-green-800,
+  .high-contrast .text-yellow-500,
+  .high-contrast .text-yellow-600,
+  .high-contrast .text-yellow-700,
+  .high-contrast .text-yellow-800,
+  .high-contrast .text-red-500,
+  .high-contrast .text-red-600,
+  .high-contrast .text-red-700,
+  .high-contrast .text-red-800,
+  .high-contrast .text-orange-500,
+  .high-contrast .text-orange-600,
+  .high-contrast .text-orange-700,
+  .high-contrast .text-orange-800,
+  .high-contrast .text-purple-500,
+  .high-contrast .text-purple-600,
+  .high-contrast .text-purple-700,
+  .high-contrast .text-purple-800,
+  .high-contrast .text-pink-500,
+  .high-contrast .text-pink-600,
+  .high-contrast .text-cyan-500,
+  .high-contrast .text-cyan-600 {
+    color: #000 !important;
+  }
+
+  .high-contrast .border-gray-100,
+  .high-contrast .border-gray-200,
+  .high-contrast .border-gray-300,
+  .high-contrast .border-gray-400,
+  .high-contrast .border-blue-200,
+  .high-contrast .border-green-200,
+  .high-contrast .border-red-200,
+  .high-contrast .border-yellow-200,
+  .high-contrast .border-indigo-200,
+  .high-contrast .border-orange-200,
+  .high-contrast .border-purple-200,
+  .high-contrast .border-amber-200 {
+    border-color: #000 !important;
+  }
+
+  .high-contrast .shadow,
+  .high-contrast .shadow-sm,
+  .high-contrast .shadow-lg,
+  .high-contrast .shadow-xl {
+    box-shadow: none !important;
+  }
+
+  .high-contrast a {
+    color: #0033cc !important;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+
+  .high-contrast a:hover,
+  .high-contrast a:focus {
+    color: #001b72 !important;
+  }
+
+  .high-contrast nav a {
+    color: #ffeb00 !important;
+  }
+
+  .high-contrast nav a:hover,
+  .high-contrast nav a:focus,
+  .high-contrast nav a:active,
+  .high-contrast nav .text-gray-300,
+  .high-contrast nav .text-white {
+    color: #ffeb00 !important;
+  }
+
+  .high-contrast nav a svg,
+  .high-contrast header svg {
+    color: #ffeb00 !important;
+  }
+
+  .high-contrast nav a[aria-current='page'],
+  .high-contrast nav a:hover {
+    border: 1px solid #ffeb00 !important;
+    background: #000 !important;
+  }
+
+  .high-contrast button,
+  .high-contrast input,
+  .high-contrast select,
+  .high-contrast textarea {
+    background: #fff !important;
+    color: #000 !important;
+    border: 2px solid #000 !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep utility-colored action buttons readable in high contrast. */
+  .high-contrast button[class*='bg-'],
+  .high-contrast [role='button'][class*='bg-'],
+  .high-contrast a[class*='bg-indigo-'],
+  .high-contrast a[class*='bg-blue-'],
+  .high-contrast a[class*='bg-green-'],
+  .high-contrast a[class*='bg-red-'],
+  .high-contrast a[class*='bg-yellow-'],
+  .high-contrast a[class*='bg-orange-'],
+  .high-contrast a[class*='bg-purple-'],
+  .high-contrast a[class*='bg-emerald-'],
+  .high-contrast a[class*='bg-amber-'],
+  .high-contrast a[class*='bg-rose-'],
+  .high-contrast a[class*='bg-cyan-'],
+  .high-contrast a[class*='bg-pink-'],
+  .high-contrast a[class*='bg-sky-'],
+  .high-contrast #accessibility-controls-toggle {
+    background: #ffeb00 !important;
+    color: #000 !important;
+    border: 2px solid #000 !important;
+  }
+
+  .high-contrast button[class*='bg-'] svg,
+  .high-contrast [role='button'][class*='bg-'] svg,
+  .high-contrast a[class*='bg-indigo-'] svg,
+  .high-contrast a[class*='bg-blue-'] svg,
+  .high-contrast a[class*='bg-green-'] svg,
+  .high-contrast a[class*='bg-red-'] svg,
+  .high-contrast a[class*='bg-yellow-'] svg,
+  .high-contrast a[class*='bg-orange-'] svg,
+  .high-contrast a[class*='bg-purple-'] svg,
+  .high-contrast a[class*='bg-emerald-'] svg,
+  .high-contrast a[class*='bg-amber-'] svg,
+  .high-contrast a[class*='bg-rose-'] svg,
+  .high-contrast a[class*='bg-cyan-'] svg,
+  .high-contrast a[class*='bg-pink-'] svg,
+  .high-contrast a[class*='bg-sky-'] svg,
+  .high-contrast #accessibility-controls-toggle svg {
+    color: #000 !important;
+  }
+
+  .high-contrast button:hover,
+  .high-contrast select:hover,
+  .high-contrast input:hover,
+  .high-contrast textarea:hover {
+    background: #f3f4f6 !important;
+  }
+
+  .high-contrast button[class*='bg-']:hover,
+  .high-contrast [role='button'][class*='bg-']:hover,
+  .high-contrast a[class*='bg-indigo-']:hover,
+  .high-contrast a[class*='bg-blue-']:hover,
+  .high-contrast a[class*='bg-green-']:hover,
+  .high-contrast a[class*='bg-red-']:hover,
+  .high-contrast a[class*='bg-yellow-']:hover,
+  .high-contrast a[class*='bg-orange-']:hover,
+  .high-contrast a[class*='bg-purple-']:hover,
+  .high-contrast a[class*='bg-emerald-']:hover,
+  .high-contrast a[class*='bg-amber-']:hover,
+  .high-contrast a[class*='bg-rose-']:hover,
+  .high-contrast a[class*='bg-cyan-']:hover,
+  .high-contrast a[class*='bg-pink-']:hover,
+  .high-contrast a[class*='bg-sky-']:hover,
+  .high-contrast #accessibility-controls-toggle:hover {
+    background: #ffe100 !important;
+  }
+
+  .high-contrast button:disabled,
+  .high-contrast input:disabled,
+  .high-contrast select:disabled,
+  .high-contrast textarea:disabled {
+    opacity: 0.65;
+  }
+
+  /* List items / dropdown rows that use Tailwind hover:bg-* light backgrounds
+     (e.g. Analytics team-search dropdown items, Recent Scouting Reports links).
+     In high-contrast (and especially HC + dark mode) the default hover paints
+     a pale background but the text stays light, making the highlighted row
+     unreadable. Force a yellow highlight with explicit black text on hover so
+     the focused row is clearly visible. */
+  .high-contrast [class*='hover\\:bg-indigo-50']:hover,
+  .high-contrast [class*='hover\\:bg-indigo-100']:hover,
+  .high-contrast [class*='hover\\:bg-gray-50']:hover,
+  .high-contrast [class*='hover\\:bg-gray-100']:hover,
+  .high-contrast [class*='hover\\:bg-slate-50']:hover,
+  .high-contrast [class*='hover\\:bg-slate-100']:hover,
+  .high-contrast [class*='hover\\:bg-blue-50']:hover,
+  .high-contrast [class*='hover\\:bg-red-50']:hover,
+  .high-contrast [class*='hover\\:bg-yellow-50']:hover,
+  .high-contrast [class*='hover\\:bg-green-50']:hover {
+    background-color: #ffe100 !important;
+  }
+  .high-contrast [class*='hover\\:bg-indigo-50']:hover *,
+  .high-contrast [class*='hover\\:bg-indigo-100']:hover *,
+  .high-contrast [class*='hover\\:bg-gray-50']:hover *,
+  .high-contrast [class*='hover\\:bg-gray-100']:hover *,
+  .high-contrast [class*='hover\\:bg-slate-50']:hover *,
+  .high-contrast [class*='hover\\:bg-slate-100']:hover *,
+  .high-contrast [class*='hover\\:bg-blue-50']:hover *,
+  .high-contrast [class*='hover\\:bg-red-50']:hover *,
+  .high-contrast [class*='hover\\:bg-yellow-50']:hover *,
+  .high-contrast [class*='hover\\:bg-green-50']:hover * {
+    color: #000 !important;
+    background-color: transparent !important;
+  }
+
+  .high-contrast button[role='switch'] {
+    border: 2px solid #000 !important;
+    background: #fff !important;
+  }
+
+  .high-contrast button[role='switch'][aria-checked='true'] {
+    background: #000 !important;
+  }
+
+  .high-contrast button[role='switch'][aria-checked='false'] {
+    background: #fff !important;
+  }
+
+  .high-contrast button[role='switch'] span {
+    border: 1px solid #000 !important;
+    background: #000 !important;
+  }
+
+  .high-contrast button[role='switch'][aria-checked='true'] span {
+    border-color: #fff !important;
+    background: #fff !important;
+  }
+
+  .high-contrast table,
+  .high-contrast th,
+  .high-contrast td {
+    border-color: #000 !important;
+  }
+
+  .high-contrast ::placeholder {
+    color: #4b5563 !important;
+  }
+
+  /* Status pill badges (e.g. "Completed", "Processing", "Failed") need a
+     visible highlight in high contrast since their tinted backgrounds are
+     flattened to white by the rules above. */
+  .high-contrast .rounded-full[class*='bg-green-100'],
+  .high-contrast .rounded-full[class*='bg-yellow-100'],
+  .high-contrast .rounded-full[class*='bg-red-100'],
+  .high-contrast .rounded-full[class*='bg-blue-100'],
+  .high-contrast .rounded-full[class*='bg-indigo-100'],
+  .high-contrast .rounded-full[class*='bg-orange-100'],
+  .high-contrast .rounded-full[class*='bg-purple-100'],
+  .high-contrast .rounded-full[class*='bg-emerald-100'],
+  .high-contrast .rounded-full[class*='bg-amber-100'],
+  .high-contrast .rounded-full[class*='bg-rose-100'],
+  .high-contrast .rounded-full[class*='bg-cyan-100'],
+  .high-contrast .rounded-full[class*='bg-pink-100'],
+  .high-contrast .rounded-full[class*='bg-sky-100'],
+  .high-contrast .rounded-full[class*='bg-gray-100'] {
+    background: #ffeb00 !important;
+    color: #000 !important;
+    border: 2px solid #000 !important;
+  }
+
+  /* Make team-accent borders consistent across both teams in high contrast. */
+  .high-contrast .border-blue-500,
+  .high-contrast .border-orange-500,
+  .high-contrast .border-blue-400,
+  .high-contrast .border-orange-400,
+  .high-contrast .border-indigo-500,
+  .high-contrast .border-emerald-500,
+  .high-contrast .border-purple-500,
+  .high-contrast .border-green-500,
+  .high-contrast .border-red-500,
+  .high-contrast .border-amber-500,
+  .high-contrast .border-cyan-500,
+  .high-contrast .border-pink-500,
+  .high-contrast .border-rose-500,
+  .high-contrast .border-lime-500,
+  .high-contrast .border-sky-500 {
+    border-color: #000 !important;
+  }
+
+  .high-contrast.dark-mode .border-blue-500,
+  .high-contrast.dark-mode .border-orange-500,
+  .high-contrast.dark-mode .border-blue-400,
+  .high-contrast.dark-mode .border-orange-400,
+  .high-contrast.dark-mode .border-indigo-500,
+  .high-contrast.dark-mode .border-emerald-500,
+  .high-contrast.dark-mode .border-purple-500,
+  .high-contrast.dark-mode .border-green-500,
+  .high-contrast.dark-mode .border-red-500,
+  .high-contrast.dark-mode .border-amber-500,
+  .high-contrast.dark-mode .border-cyan-500,
+  .high-contrast.dark-mode .border-pink-500,
+  .high-contrast.dark-mode .border-rose-500,
+  .high-contrast.dark-mode .border-lime-500,
+  .high-contrast.dark-mode .border-sky-500 {
+    border-color: #ffeb00 !important;
+  }
+
+/* Reduced motion */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Enhanced focus indicators */
+.enhanced-focus *:focus {
+  outline: 3px solid #005fcc !important;
+  outline-offset: 2px !important;
+}
+
+.high-contrast.enhanced-focus *:focus {
+  outline-color: var(--focus-ring) !important;
+}
+
+/* Enhanced keyboard navigation */
+.enhanced-keyboard-nav {
+  scroll-behavior: auto;
+}
+
+.enhanced-keyboard-nav .skip-nav-link {
+  top: 6px;
+}
+
+.enhanced-keyboard-nav a:focus-visible,
+.enhanced-keyboard-nav button:focus-visible,
+.enhanced-keyboard-nav input:focus-visible,
+.enhanced-keyboard-nav select:focus-visible,
+.enhanced-keyboard-nav textarea:focus-visible,
+.enhanced-keyboard-nav [role='button']:focus-visible,
+.enhanced-keyboard-nav [role='switch']:focus-visible {
+  outline: 3px solid #005fcc !important;
+  outline-offset: 3px !important;
+}
+
+/* Screen reader optimizations */
+.screen-reader-optimized {
+  letter-spacing: 0.01em;
+  word-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+.screen-reader-optimized .sr-only {
+  clip: auto;
+  width: 1px;
+  height: 1px;
+}
+
+/* WCAG 2.1 AA Color Contrast Requirements */
+/* Ensure minimum contrast ratio of 4.5:1 for normal text */
+/* Ensure minimum contrast ratio of 3:1 for large text */
+
+/* Focus management */
+*:focus {
+  outline: 2px solid #005fcc;
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users only */
+.js-focus-visible *:focus:not(.focus-visible) {
+  outline: none;
+}
+
+/* Text spacing and readability */
+p, li, h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+/* Link indicators */
+a:not([class]) {
+  text-decoration: underline;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+/* Print styles for accessibility */
+@media print {
+  .skip-nav-link,
+  .accessibility-controls {
+    display: none;
+  }
+  
+  * {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+  }
+}
+
+/* Responsive text sizing for accessibility */
+@media (max-width: 768px) {
+  html {
+    font-size: calc(16px * var(--font-scale) * 1.05);
+  }
+}
+
+/* Animation respect for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.high-contrast svg {
+  color: currentColor;
+  stroke: currentColor;
+}
+
+/* Make small outline icons more legible in high contrast. */
+.high-contrast svg[fill='none'] {
+  stroke-width: 2.2 !important;
+}
+
+.high-contrast .app-main-content svg {
+  color: #000 !important;
+  stroke: currentColor;
+}
+
+.high-contrast.dark-mode .app-main-content svg {
+  color: #f8fafc !important;
+  stroke: currentColor;
+}
+
+.high-contrast.dark-mode .homepage-shell,
+.high-contrast .homepage-shell {
+  background: #f3f4f6 !important;
+}
+
+.high-contrast .homepage-hero-section,
+.high-contrast.dark-mode .homepage-hero-section {
+  background: #e5e7eb !important;
+  border-bottom: 2px solid #000 !important;
+}
+
+.high-contrast .homepage-features-section,
+.high-contrast.dark-mode .homepage-features-section {
+  background: #ffffff !important;
+  border-top: 2px solid #000 !important;
+  border-bottom: 2px solid #000 !important;
+}
+
+.high-contrast .homepage-sports-section,
+.high-contrast.dark-mode .homepage-sports-section {
+  background: #e2e8f0 !important;
+  border-top: 2px solid #000 !important;
+  border-bottom: 2px solid #000 !important;
+}
+
+.high-contrast .homepage-cta-section,
+.high-contrast.dark-mode .homepage-cta-section {
+  background: #dbeafe !important;
+  border-top: 2px solid #000 !important;
+  border-bottom: 2px solid #000 !important;
+}
+
+.high-contrast .homepage-footer-section,
+.high-contrast.dark-mode .homepage-footer-section {
+  background: #ffffff !important;
+  border-top: 2px solid #000 !important;
+}
+
+.high-contrast .homepage-cta-section h2,
+.high-contrast .homepage-cta-section p,
+.high-contrast.dark-mode .homepage-cta-section h2,
+.high-contrast.dark-mode .homepage-cta-section p {
+  color: #000 !important;
+}
+
+.high-contrast .quick-action-card,
+.high-contrast.dark-mode .quick-action-card {
+  background: #000 !important;
+  border: 2px solid #ffeb00 !important;
+  box-shadow: inset 0 0 0 1px #000 !important;
+}
+
+.high-contrast .quick-action-title,
+.high-contrast .quick-action-card > div svg,
+.high-contrast.dark-mode .quick-action-title,
+.high-contrast.dark-mode .quick-action-card > div svg {
+  color: #ffeb00 !important;
+}
+
+.high-contrast .quick-action-description,
+.high-contrast.dark-mode .quick-action-description {
+  color: #fef08a !important;
+}
+
+.high-contrast .quick-action-icon-badge,
+.high-contrast.dark-mode .quick-action-icon-badge {
+  background: #111 !important;
+  color: #ffeb00 !important;
+  border: 2px solid #ffeb00 !important;
+  opacity: 1 !important;
+}
+
+.high-contrast .quick-action-icon-badge svg,
+.high-contrast.dark-mode .quick-action-icon-badge svg {
+  color: #ffeb00 !important;
+  stroke: #ffeb00 !important;
+  fill: none !important;
+  stroke-width: 2.25 !important;
+}
+
+.high-contrast .quick-action-card:hover,
+.high-contrast .quick-action-card:focus-within,
+.high-contrast.dark-mode .quick-action-card:hover,
+.high-contrast.dark-mode .quick-action-card:focus-within {
+  background: #0a0a0a !important;
+  border-color: #fff200 !important;
+}
+
+.high-contrast .dashboard-primary-cta,
+.high-contrast.dark-mode .dashboard-primary-cta {
+  background: #ffeb00 !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+.high-contrast .dashboard-primary-cta svg,
+.high-contrast.dark-mode .dashboard-primary-cta svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+.high-contrast .dashboard-primary-cta:hover,
+.high-contrast .dashboard-primary-cta:focus,
+.high-contrast.dark-mode .dashboard-primary-cta:hover,
+.high-contrast.dark-mode .dashboard-primary-cta:focus {
+  background: #fff200 !important;
+  color: #000 !important;
+}
+
+.high-contrast .team-card-avatar,
+.high-contrast.dark-mode .team-card-avatar {
+  background: #111 !important;
+  border: 2px solid #ffeb00 !important;
+}
+
+.high-contrast .team-card-avatar-text,
+.high-contrast.dark-mode .team-card-avatar-text {
+  color: #ffeb00 !important;
+}
+
+.high-contrast .team-card-meta-icon,
+.high-contrast.dark-mode .team-card-meta-icon {
+  color: #000 !important;
+  stroke: #000 !important;
+  fill: none !important;
+  stroke-width: 2.25 !important;
+}
+
+.high-contrast.dark-mode .team-card-meta-icon {
+  color: #ffeb00 !important;
+  stroke: #ffeb00 !important;
+  opacity: 1 !important;
+}
+
+.high-contrast .team-selection-card {
+  border: 2px solid #000 !important;
+  background: #fff !important;
+}
+
+.high-contrast .team-selection-primary-action {
+  background: #ffeb00 !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+
+.high-contrast .team-selection-primary-action svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+.high-contrast .team-selection-secondary-action {
+  background: #ffeb00 !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+
+.high-contrast .team-selection-secondary-action svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+/* Dedicated dark + high-contrast theme (separate from light high-contrast). */
+.high-contrast.dark-mode {
+  color-scheme: dark;
+}
+
+.high-contrast.dark-mode body,
+.high-contrast.dark-mode main,
+.high-contrast.dark-mode footer,
+.high-contrast.dark-mode .min-h-screen {
+  background: #050505 !important;
+  color: #f8fafc !important;
+}
+
+.high-contrast.dark-mode .bg-white,
+.high-contrast.dark-mode .bg-gray-50,
+.high-contrast.dark-mode .bg-gray-100,
+.high-contrast.dark-mode .bg-gray-200,
+.high-contrast.dark-mode .bg-slate-50,
+.high-contrast.dark-mode .bg-slate-100,
+.high-contrast.dark-mode .bg-indigo-50,
+.high-contrast.dark-mode .bg-blue-50,
+.high-contrast.dark-mode .bg-green-50,
+.high-contrast.dark-mode .bg-yellow-50,
+.high-contrast.dark-mode .bg-red-50,
+.high-contrast.dark-mode .bg-orange-50,
+.high-contrast.dark-mode .bg-purple-50,
+.high-contrast.dark-mode .bg-cyan-50,
+.high-contrast.dark-mode .bg-pink-50,
+.high-contrast.dark-mode .bg-amber-50,
+.high-contrast.dark-mode .bg-rose-50,
+.high-contrast.dark-mode .bg-lime-50,
+.high-contrast.dark-mode .bg-sky-50,
+.high-contrast.dark-mode .bg-indigo-100,
+.high-contrast.dark-mode .bg-blue-100,
+.high-contrast.dark-mode .bg-green-100,
+.high-contrast.dark-mode .bg-yellow-100,
+.high-contrast.dark-mode .bg-red-100,
+.high-contrast.dark-mode .bg-orange-100,
+.high-contrast.dark-mode .bg-purple-100,
+.high-contrast.dark-mode .bg-cyan-100,
+.high-contrast.dark-mode .bg-pink-100,
+.high-contrast.dark-mode .bg-amber-100,
+.high-contrast.dark-mode .bg-rose-100,
+.high-contrast.dark-mode .bg-lime-100,
+.high-contrast.dark-mode .bg-sky-100 {
+  background: #111111 !important;
+  border-color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .bg-gray-900,
+.high-contrast.dark-mode .bg-gray-800,
+.high-contrast.dark-mode .bg-gray-700,
+.high-contrast.dark-mode .bg-slate-900,
+.high-contrast.dark-mode .bg-slate-800,
+.high-contrast.dark-mode .bg-slate-700,
+.high-contrast.dark-mode .bg-indigo-600,
+.high-contrast.dark-mode .bg-blue-600,
+.high-contrast.dark-mode .bg-red-600,
+.high-contrast.dark-mode .bg-green-600,
+.high-contrast.dark-mode .bg-yellow-600,
+.high-contrast.dark-mode .bg-orange-500,
+.high-contrast.dark-mode .bg-purple-500,
+.high-contrast.dark-mode .bg-blue-500,
+.high-contrast.dark-mode .bg-green-500,
+.high-contrast.dark-mode .bg-indigo-500 {
+  background: #1a1a1a !important;
+}
+
+.high-contrast.dark-mode .text-gray-900,
+.high-contrast.dark-mode .text-gray-800,
+.high-contrast.dark-mode .text-gray-700,
+.high-contrast.dark-mode .text-gray-600,
+.high-contrast.dark-mode .text-gray-500,
+.high-contrast.dark-mode .text-gray-400,
+.high-contrast.dark-mode .text-gray-300,
+.high-contrast.dark-mode .text-gray-200,
+.high-contrast.dark-mode .text-gray-100,
+.high-contrast.dark-mode .text-indigo-800,
+.high-contrast.dark-mode .text-indigo-700,
+.high-contrast.dark-mode .text-indigo-600,
+.high-contrast.dark-mode .text-indigo-500,
+.high-contrast.dark-mode .text-blue-800,
+.high-contrast.dark-mode .text-blue-700,
+.high-contrast.dark-mode .text-blue-600,
+.high-contrast.dark-mode .text-blue-500,
+.high-contrast.dark-mode .text-green-800,
+.high-contrast.dark-mode .text-green-700,
+.high-contrast.dark-mode .text-green-600,
+.high-contrast.dark-mode .text-green-500,
+.high-contrast.dark-mode .text-yellow-800,
+.high-contrast.dark-mode .text-yellow-700,
+.high-contrast.dark-mode .text-yellow-600,
+.high-contrast.dark-mode .text-yellow-500,
+.high-contrast.dark-mode .text-red-800,
+.high-contrast.dark-mode .text-red-700,
+.high-contrast.dark-mode .text-red-600,
+.high-contrast.dark-mode .text-red-500,
+.high-contrast.dark-mode .text-orange-800,
+.high-contrast.dark-mode .text-orange-700,
+.high-contrast.dark-mode .text-orange-600,
+.high-contrast.dark-mode .text-orange-500,
+.high-contrast.dark-mode .text-purple-800,
+.high-contrast.dark-mode .text-purple-700,
+.high-contrast.dark-mode .text-purple-600,
+.high-contrast.dark-mode .text-purple-500,
+.high-contrast.dark-mode .text-cyan-600,
+.high-contrast.dark-mode .text-cyan-500,
+.high-contrast.dark-mode .text-pink-600,
+.high-contrast.dark-mode .text-pink-500 {
+  color: #f8fafc !important;
+}
+
+.high-contrast.dark-mode a {
+  color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode a:hover,
+.high-contrast.dark-mode a:focus {
+  color: #fff9a8 !important;
+}
+
+.high-contrast.dark-mode .border-gray-100,
+.high-contrast.dark-mode .border-gray-200,
+.high-contrast.dark-mode .border-gray-300,
+.high-contrast.dark-mode .border-gray-400,
+.high-contrast.dark-mode .border-blue-200,
+.high-contrast.dark-mode .border-green-200,
+.high-contrast.dark-mode .border-red-200,
+.high-contrast.dark-mode .border-yellow-200,
+.high-contrast.dark-mode .border-indigo-200,
+.high-contrast.dark-mode .border-orange-200,
+.high-contrast.dark-mode .border-purple-200,
+.high-contrast.dark-mode .border-amber-200 {
+  border-color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode button,
+.high-contrast.dark-mode input,
+.high-contrast.dark-mode select,
+.high-contrast.dark-mode textarea {
+  background: #111111 !important;
+  color: #f8fafc !important;
+  border: 2px solid #ffeb00 !important;
+}
+
+.high-contrast.dark-mode button:hover,
+.high-contrast.dark-mode input:hover,
+.high-contrast.dark-mode select:hover,
+.high-contrast.dark-mode textarea:hover {
+  background: #1a1a1a !important;
+}
+
+.high-contrast.dark-mode .max-w-7xl > div + div,
+.high-contrast.dark-mode .max-w-6xl > div + div,
+.high-contrast.dark-mode .max-w-5xl > div + div,
+.high-contrast.dark-mode .max-w-4xl > div + div {
+  border-top: 2px solid #2b2b2b !important;
+}
+
+.high-contrast.dark-mode .homepage-shell {
+  background: #050505 !important;
+}
+
+.high-contrast.dark-mode .homepage-hero-section,
+.high-contrast.dark-mode .homepage-features-section,
+.high-contrast.dark-mode .homepage-sports-section,
+.high-contrast.dark-mode .homepage-cta-section,
+.high-contrast.dark-mode .homepage-footer-section {
+  background: #111111 !important;
+  border-color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .homepage-cta-section h2,
+.high-contrast.dark-mode .homepage-cta-section p,
+.high-contrast.dark-mode .homepage-hero-note {
+  color: #f8fafc !important;
+}
+
+/* Unified dark + high-contrast visual system across the entire app. */
+.high-contrast.dark-mode {
+  --hc-bg: #0f1319;
+  --hc-surface: #1b2330;
+  --hc-surface-alt: #243040;
+  --hc-border: #8fa3bf;
+  --hc-text: #f8fafc;
+  --hc-muted: #cbd5e1;
+  --hc-accent: #ffeb00;
+  --hc-accent-ink: #111827;
+  --hc-link: #93c5fd;
+}
+
+.high-contrast.dark-mode body,
+.high-contrast.dark-mode #root,
+.high-contrast.dark-mode main,
+.high-contrast.dark-mode footer,
+.high-contrast.dark-mode .min-h-screen {
+  background: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+}
+
+.high-contrast.dark-mode main :where(
+  .bg-white,
+  .bg-gray-50,
+  .bg-gray-100,
+  .bg-gray-200,
+  .bg-slate-50,
+  .bg-slate-100,
+  .bg-indigo-50,
+  .bg-blue-50,
+  .bg-green-50,
+  .bg-yellow-50,
+  .bg-red-50,
+  .bg-orange-50,
+  .bg-purple-50,
+  .bg-cyan-50,
+  .bg-pink-50,
+  .bg-amber-50,
+  .bg-rose-50,
+  .bg-lime-50,
+  .bg-sky-50,
+  .bg-indigo-100,
+  .bg-blue-100,
+  .bg-green-100,
+  .bg-yellow-100,
+  .bg-red-100,
+  .bg-orange-100,
+  .bg-purple-100,
+  .bg-cyan-100,
+  .bg-pink-100,
+  .bg-amber-100,
+  .bg-rose-100,
+  .bg-lime-100,
+  .bg-sky-100
+) {
+  background: var(--hc-surface) !important;
+  border: 1px solid var(--hc-border) !important;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.35) !important;
+}
+
+.high-contrast.dark-mode main :where(
+  .bg-gray-900,
+  .bg-gray-800,
+  .bg-gray-700,
+  .bg-slate-900,
+  .bg-slate-800,
+  .bg-slate-700
+) {
+  background: var(--hc-surface-alt) !important;
+  border-color: var(--hc-border) !important;
+}
+
+.high-contrast.dark-mode main :where(.max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl) > div + div {
+  border-top: 1px solid #3f4b5f !important;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.high-contrast.dark-mode :where(
+  .text-gray-900,
+  .text-gray-800,
+  .text-gray-700,
+  .text-gray-600,
+  .text-gray-500,
+  .text-gray-400,
+  .text-gray-300,
+  .text-gray-200,
+  .text-gray-100,
+  .text-indigo-900,
+  .text-indigo-800,
+  .text-indigo-700,
+  .text-indigo-600,
+  .text-indigo-500,
+  .text-blue-900,
+  .text-blue-800,
+  .text-blue-700,
+  .text-blue-600,
+  .text-blue-500,
+  .text-green-900,
+  .text-green-800,
+  .text-green-700,
+  .text-green-600,
+  .text-green-500,
+  .text-yellow-900,
+  .text-yellow-800,
+  .text-yellow-700,
+  .text-yellow-600,
+  .text-yellow-500,
+  .text-red-900,
+  .text-red-800,
+  .text-red-700,
+  .text-red-600,
+  .text-red-500,
+  .text-orange-900,
+  .text-orange-800,
+  .text-orange-700,
+  .text-orange-600,
+  .text-orange-500,
+  .text-purple-900,
+  .text-purple-800,
+  .text-purple-700,
+  .text-purple-600,
+  .text-purple-500,
+  .text-cyan-900,
+  .text-cyan-800,
+  .text-cyan-700,
+  .text-cyan-600,
+  .text-cyan-500,
+  .text-pink-900,
+  .text-pink-800,
+  .text-pink-700,
+  .text-pink-600,
+  .text-pink-500,
+  .text-lime-900,
+  .text-lime-800,
+  .text-lime-700,
+  .text-lime-600,
+  .text-lime-500,
+  .text-rose-900,
+  .text-rose-800,
+  .text-rose-700,
+  .text-rose-600,
+  .text-rose-500,
+  .text-sky-900,
+  .text-sky-800,
+  .text-sky-700,
+  .text-sky-600,
+  .text-sky-500,
+  .text-amber-900,
+  .text-amber-800,
+  .text-amber-700,
+  .text-amber-600,
+  .text-amber-500,
+  .text-white
+) {
+  color: var(--hc-text) !important;
+}
+
+.high-contrast.dark-mode :where(.text-gray-500, .text-gray-400, .text-slate-500, .text-slate-400) {
+  color: var(--hc-muted) !important;
+}
+
+.high-contrast.dark-mode :where(.border-gray-100, .border-gray-200, .border-gray-300, .border-gray-400, .border-slate-200, .border-slate-300) {
+  border-color: var(--hc-border) !important;
+}
+
+.high-contrast.dark-mode a {
+  color: var(--hc-link) !important;
+}
+
+.high-contrast.dark-mode a:hover,
+.high-contrast.dark-mode a:focus {
+  color: #bfdbfe !important;
+}
+
+.high-contrast.dark-mode nav,
+.high-contrast.dark-mode nav.bg-gray-900,
+.high-contrast.dark-mode nav .bg-gray-900,
+.high-contrast.dark-mode nav .bg-gray-800,
+.high-contrast.dark-mode nav .bg-gray-700 {
+  background: #000 !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+.high-contrast.dark-mode nav a,
+.high-contrast.dark-mode nav a svg,
+.high-contrast.dark-mode header svg {
+  color: var(--hc-accent) !important;
+}
+
+.high-contrast.dark-mode nav a[aria-current='page'],
+.high-contrast.dark-mode nav a:hover {
+  border: 1px solid var(--hc-accent) !important;
+  background: #1f2937 !important;
+}
+
+.high-contrast.dark-mode input,
+.high-contrast.dark-mode select,
+.high-contrast.dark-mode textarea {
+  background: #0f172a !important;
+  color: var(--hc-text) !important;
+  border: 2px solid var(--hc-border) !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.4) !important;
+}
+
+.high-contrast.dark-mode input:focus,
+.high-contrast.dark-mode select:focus,
+.high-contrast.dark-mode textarea:focus {
+  border-color: var(--hc-accent) !important;
+  box-shadow: 0 0 0 2px rgba(255, 235, 0, 0.25) !important;
+}
+
+.high-contrast.dark-mode select option {
+  background: #0f172a;
+  color: var(--hc-text);
+}
+
+.high-contrast.dark-mode button,
+.high-contrast.dark-mode main a.inline-flex,
+.high-contrast.dark-mode main button.inline-flex {
+  border-color: var(--hc-border) !important;
+}
+
+.high-contrast.dark-mode :where(a, button)[class~='bg-indigo-600'],
+.high-contrast.dark-mode :where(a, button)[class~='bg-blue-600'],
+.high-contrast.dark-mode :where(a, button)[class~='bg-green-600'],
+.high-contrast.dark-mode :where(a, button)[class~='bg-yellow-600'] {
+  background: var(--hc-accent) !important;
+  color: var(--hc-accent-ink) !important;
+  border: 2px solid var(--hc-accent) !important;
+}
+
+.high-contrast.dark-mode :where(a, button)[class~='bg-indigo-600'] svg,
+.high-contrast.dark-mode :where(a, button)[class~='bg-blue-600'] svg,
+.high-contrast.dark-mode :where(a, button)[class~='bg-green-600'] svg,
+.high-contrast.dark-mode :where(a, button)[class~='bg-yellow-600'] svg {
+  color: var(--hc-accent-ink) !important;
+  stroke: var(--hc-accent-ink) !important;
+}
+
+.high-contrast.dark-mode :where(a, button)[class~='bg-gray-300'],
+.high-contrast.dark-mode :where(a, button)[class~='bg-gray-200'] {
+  background: #374151 !important;
+  color: var(--hc-text) !important;
+  border: 2px solid #94a3b8 !important;
+}
+
+.high-contrast.dark-mode :where(a, button)[class~='bg-gray-300'] svg,
+.high-contrast.dark-mode :where(a, button)[class~='bg-gray-200'] svg {
+  color: var(--hc-text) !important;
+  stroke: var(--hc-text) !important;
+}
+
+.high-contrast.dark-mode svg {
+  color: currentColor;
+  stroke: currentColor;
+}
+
+.high-contrast.dark-mode .analytics-page .analytics-sections > * {
+  position: relative;
+  border-top: 2px solid #334155 !important;
+  padding-top: 1rem;
+}
+
+.high-contrast.dark-mode .analytics-page :where(.bg-white.shadow.rounded-lg.p-6) {
+  background: #1f2937 !important;
+  border: 2px solid #94a3b8 !important;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.45) !important;
+}
+
+.high-contrast.dark-mode .analytics-page :where(.bg-blue-50, .bg-orange-50, .bg-green-50, .bg-red-50, .bg-yellow-50) {
+  background: #111827 !important;
+  border: 2px solid #475569 !important;
+}
+
+/* Inner translucent white panels (Tailwind bg-white/70) inside Analytics
+   colored cards. These show up in Performance Metrics rating tiles and
+   Recent Trends streak/breakdown boxes. Use a slightly raised dark fill so
+   they read as cards instead of glaring white blobs in dark + HC. */
+.high-contrast.dark-mode .analytics-page :where(
+  [class*='bg-white/'],
+  [class~='bg-white\\/70'],
+  [class~='bg-white\\/80'],
+  [class~='bg-white\\/60'],
+  [class~='bg-white\\/50']
+) {
+  background: #1e293b !important;
+  border: 1px solid #475569 !important;
+  color: #f8fafc !important;
+}
+
+/* Inner solid white pills inside the team identity colored cards
+   ("Defensive-oriented", characteristic chips). Keep them visually distinct
+   from the yellow-bordered outer card frame by using a softer slate border. */
+.high-contrast.dark-mode .analytics-page :where(.bg-blue-50, .bg-orange-50) :where(.bg-white) {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+.high-contrast.dark-mode .analytics-page :where(.border-blue-500, .border-orange-500, .border-green-500, .border-red-500, .border-yellow-500, .border-indigo-500, .border-purple-500) {
+  border-color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .analytics-page :where(.text-blue-600, .text-orange-600, .text-green-600, .text-red-600, .text-yellow-600, .text-indigo-600, .text-purple-600) {
+  color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .analytics-page :where(.text-blue-800, .text-orange-800, .text-green-800, .text-red-800, .text-yellow-800, .text-indigo-800, .text-purple-800) {
+  color: #f8fafc !important;
+}
+
+/* Apply the same strong section/card definition pattern across all tabs. */
+.high-contrast.dark-mode .app-main-content :where(.max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl) > div + div {
+  border-top: 2px solid #334155 !important;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.high-contrast.dark-mode .app-main-content :where(
+  .bg-white.shadow.rounded-lg,
+  .bg-white.rounded-lg,
+  .rounded-lg.bg-white,
+  .rounded-lg.border,
+  .bg-red-50.border,
+  .bg-yellow-50.border,
+  .bg-blue-50.border,
+  .bg-green-50.border,
+  .bg-orange-50.border,
+  .bg-indigo-50.border
+) {
+  background: #1f2937 !important;
+  border: 2px solid #94a3b8 !important;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.45) !important;
+}
+
+.high-contrast.dark-mode .app-main-content :where(
+  .bg-blue-50,
+  .bg-orange-50,
+  .bg-green-50,
+  .bg-red-50,
+  .bg-yellow-50,
+  .bg-indigo-50,
+  .bg-purple-50,
+  .bg-cyan-50,
+  .bg-pink-50,
+  .bg-amber-50,
+  .bg-lime-50,
+  .bg-rose-50,
+  .bg-sky-50
+) {
+  background: #273447 !important;
+  border-color: #64748b !important;
+}
+
+.high-contrast.dark-mode .app-main-content :where(
+  .text-blue-600,
+  .text-orange-600,
+  .text-green-600,
+  .text-red-600,
+  .text-yellow-600,
+  .text-indigo-600,
+  .text-purple-600,
+  .text-cyan-600,
+  .text-pink-600,
+  .text-amber-600,
+  .text-lime-600,
+  .text-rose-600,
+  .text-sky-600
+) {
+  color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .app-main-content :where(
+  .text-blue-800,
+  .text-orange-800,
+  .text-green-800,
+  .text-red-800,
+  .text-yellow-800,
+  .text-indigo-800,
+  .text-purple-800,
+  .text-cyan-800,
+  .text-pink-800,
+  .text-amber-800,
+  .text-lime-800,
+  .text-rose-800,
+  .text-sky-800
+) {
+  color: #f8fafc !important;
+}
+
+.high-contrast.dark-mode .app-main-content :where(select, input, textarea) {
+  background: #0f172a !important;
+  border: 2px solid #94a3b8 !important;
+  color: #f8fafc !important;
+}
+
+.high-contrast.dark-mode .app-main-content :where(select:focus, input:focus, textarea:focus) {
+  border-color: #ffeb00 !important;
+  box-shadow: 0 0 0 2px rgba(255, 235, 0, 0.22) !important;
+}
+
+.high-contrast.dark-mode .team-selection-card {
+  background: #1f2937 !important;
+  border: 2px solid #93a4bb !important;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.55), 0 8px 20px rgba(2, 6, 23, 0.35) !important;
+}
+
+.high-contrast.dark-mode .team-selection-grid {
+  gap: 1.1rem !important;
+}
+
+.high-contrast.dark-mode .team-card-actions-panel {
+  background: #334155 !important;
+  border: 1px solid #64748b !important;
+  border-radius: 0.75rem;
+  padding: 0.45rem;
+}
+
+.high-contrast.dark-mode .team-selection-primary-action {
+  background: #ffeb00 !important;
+  color: #000 !important;
+  border: 2px solid #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .team-selection-primary-action:hover,
+.high-contrast.dark-mode .team-selection-primary-action:focus {
+  background: #fff48a !important;
+}
+
+.high-contrast.dark-mode .team-selection-primary-action svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+.high-contrast.dark-mode .team-selection-secondary-action {
+  background: #ffeb00 !important;
+  color: #000 !important;
+  border: 2px solid #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .team-selection-secondary-action:hover,
+.high-contrast.dark-mode .team-selection-secondary-action:focus {
+  background: #fff48a !important;
+  border-color: #fff48a !important;
+}
+
+.high-contrast.dark-mode .team-selection-secondary-action svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+.high-contrast .analytics-season-stats-section {
+  border: 2px solid #000 !important;
+  background: #fff !important;
+}
+
+.high-contrast .analytics-stat-tile {
+  background: #f8fafc !important;
+  border-top: 1px solid #d1d5db !important;
+  border-right: 1px solid #d1d5db !important;
+  border-bottom: 1px solid #d1d5db !important;
+}
+
+.high-contrast.dark-mode .analytics-season-stats-section {
+  background: #0f1115 !important;
+  border: 2px solid #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .analytics-season-stats-grid {
+  gap: 0.9rem;
+}
+
+.high-contrast.dark-mode .analytics-stat-tile {
+  background: #161b22 !important;
+  border-top: 1px solid #30363d !important;
+  border-right: 1px solid #30363d !important;
+  border-bottom: 1px solid #30363d !important;
+  box-shadow: inset 0 0 0 1px #0b0f14 !important;
+}
+
+.high-contrast.dark-mode .analytics-season-stats-section .text-gray-500,
+.high-contrast.dark-mode .analytics-stat-tile [class*='text-'][class*='-900'],
+.high-contrast.dark-mode .analytics-stat-tile [class*='text-'][class*='-800'],
+.high-contrast.dark-mode .analytics-stat-tile [class*='text-'][class*='-700'],
+.high-contrast.dark-mode .analytics-stat-tile [class*='text-'][class*='-600'] {
+  color: #f3f4f6 !important;
+}
+
+.high-contrast.dark-mode .analytics-stat-tile .text-xs.font-semibold.uppercase {
+  color: #ffeb00 !important;
+}
+
+.high-contrast.dark-mode .analytics-stat-tile .text-2xl.font-bold {
+  color: #ffffff !important;
+}
+
+.high-contrast.dark-mode .homepage-hero-note,
+.high-contrast .homepage-hero-note {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: #000 !important;
+}

@@ -2,14 +2,14 @@ databases:
   - name: scoutd3-db
     databaseName: scoutd3
     user: scoutd3
-    plan: starter
+    plan: free
 
 services:
   - type: web
     name: scoutd3-backend
     runtime: python
     rootDir: backend
-    plan: starter
+    plan: free
     buildCommand: pip install -r requirements.txt
     preDeployCommand: alembic upgrade head
     startCommand: uvicorn main_simple:app --host 0.0.0.0 --port $PORT

@@ -1,0 +1,40 @@
+databases:
+  - name: scoutd3-db
+    databaseName: scoutd3
+    user: scoutd3
+    plan: starter
+
+services:
+  - type: web
+    name: scoutd3-backend
+    runtime: python
+    rootDir: backend
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    preDeployCommand: alembic upgrade head
+    startCommand: uvicorn main_simple:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: scoutd3-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: JWT_EXPIRE_MINUTES
+        value: "1440"
+      - key: DATA_REFRESH_INTERVAL_HOURS
+        value: "6"
+      - key: CORS_ORIGINS
+        value: https://scoutd3-frontend.onrender.com
+
+  - type: static
+    name: scoutd3-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://scoutd3-backend.onrender.com/api/v1

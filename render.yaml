@@ -30,7 +30,8 @@ services:
       - key: CORS_ORIGINS
         value: https://scoutd3-frontend.onrender.com
 
-  - type: static
+  - type: web
+    runtime: static
     name: scoutd3-frontend
     rootDir: frontend
     buildCommand: npm install && npm run build
@@ -38,3 +39,7 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://scoutd3-backend.onrender.com/api/v1
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

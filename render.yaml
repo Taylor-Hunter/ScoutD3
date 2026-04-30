@@ -33,9 +33,11 @@ services:
     runtime: static
     name: scoutd3-frontend
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npx vite build
     staticPublishPath: dist
     envVars:
+      - key: NODE_VERSION
+        value: "20"
       - key: VITE_API_URL
         value: https://scoutd3-backend.onrender.com/api/v1
     routes:

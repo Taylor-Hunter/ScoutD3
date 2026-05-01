@@ -96,6 +96,23 @@ const getBlobErrorMessage = async (err: unknown, fallback: string): Promise<stri
   return fallback;
 };
 
+// Stat keys hidden from analytics stat tables. These are raw cumulative
+// counts that aren't useful as standalone scouting metrics; the per-game
+// and percentage versions are kept.
+const HIDDEN_STAT_KEYS = new Set<string>([
+  'fgm',
+  'fga',
+  'opp_fgm',
+  'opp_fga',
+  'ftm',
+  'fta',
+  'reb',
+  'opp_reb',
+  'opp_rpg',
+  'three_fgm',
+  'three_fga',
+]);
+
 const getStatLabelMap = (): Record<string, string> => ({
   points_per_game: 'Points Per Game',
   opponent_ppg: 'Opponent PPG',
@@ -865,7 +882,9 @@ const Analytics: React.FC = () => {
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 bg-white">
-                              {Object.entries(teamStats.stats).map(([key, value]) => (
+                              {Object.entries(teamStats.stats)
+                                .filter(([key]) => !HIDDEN_STAT_KEYS.has(key.toLowerCase()))
+                                .map(([key, value]) => (
                                 <tr key={key}>
                                   <td className="px-3 py-2 text-sm text-gray-700">
                                     {formatStatLabel(key)}
@@ -903,7 +922,9 @@ const Analytics: React.FC = () => {
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 bg-white">
-                              {Object.entries(comparisonTeamStats.stats).map(([key, value]) => (
+                              {Object.entries(comparisonTeamStats.stats)
+                                .filter(([key]) => !HIDDEN_STAT_KEYS.has(key.toLowerCase()))
+                                .map(([key, value]) => (
                                 <tr key={key}>
                                   <td className="px-3 py-2 text-sm text-gray-700">
                                     {formatStatLabel(key)}
@@ -962,7 +983,9 @@ const Analytics: React.FC = () => {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100 bg-white">
-                            {Object.entries(teamStats.stats).map(([key, value]) => (
+                            {Object.entries(teamStats.stats)
+                              .filter(([key]) => !HIDDEN_STAT_KEYS.has(key.toLowerCase()))
+                              .map(([key, value]) => (
                               <tr key={key}>
                                 <td className="px-3 py-2 text-sm text-gray-700">
                                   {formatStatLabel(key)}

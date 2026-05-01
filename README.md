@@ -53,6 +53,36 @@ Alternative commands:
 - Windows PowerShell: `powershell -ExecutionPolicy Bypass -File scripts/run-local.ps1`
 - macOS/Linux: `bash scripts/run-local.sh`
 
+### Fast Restart (After First Setup)
+
+If you have already run `run-local.cmd` once on this machine and the
+virtual environment and `node_modules` are present, you can skip the
+install and migration steps and bring the stack up in a couple of
+seconds with:
+
+```powershell
+scripts\start-fast.cmd
+```
+
+This script verifies that `backend/.venv` and `frontend/node_modules`
+exist, then launches the backend (uvicorn on port 8000) and the
+frontend (Vite on port 5173) in two new terminal windows. It does
+**not** install dependencies or run migrations, so use it only for
+day-to-day startup. Run `run-local.cmd` again whenever dependencies
+change or a new database migration is added.
+
+The macOS and Linux equivalent is `scripts/start-fast.sh`:
+
+```bash
+chmod +x scripts/start-fast.sh   # first time only
+./scripts/start-fast.sh
+```
+
+It performs the same checks against `backend/.venv` and
+`frontend/node_modules`, starts the backend in the background, and
+runs the frontend in the foreground. Use `scripts/run-local.sh`
+when dependencies or migrations change.
+
 ### Prerequisites
 
 - Python 3.11+

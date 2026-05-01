@@ -35,6 +35,23 @@ interface TeamReport {
   };
 }
 
+// Stat keys hidden from the team details statistics table. These are raw
+// cumulative counts that aren't useful as standalone scouting metrics; the
+// per-game and percentage versions are kept.
+const HIDDEN_STAT_KEYS = new Set<string>([
+  'fgm',
+  'fga',
+  'opp_fgm',
+  'opp_fga',
+  'ftm',
+  'fta',
+  'reb',
+  'opp_reb',
+  'opp_rpg',
+  'three_fgm',
+  'three_fga',
+]);
+
 const getPrimaryStatKeys = (sport: string): string[] => {
   const normalized = (sport || '').toLowerCase();
   if (normalized.includes('soccer')) {
@@ -468,7 +485,9 @@ const TeamDetails: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100 bg-white">
-                      {Object.entries(teamStats.stats).map(([key, value]) => (
+                      {Object.entries(teamStats.stats)
+                        .filter(([key]) => !HIDDEN_STAT_KEYS.has(key.toLowerCase()))
+                        .map(([key, value]) => (
                         <tr key={key}>
                           <td className="px-3 py-2 text-sm text-gray-700">
                             {formatStatLabel(key)}

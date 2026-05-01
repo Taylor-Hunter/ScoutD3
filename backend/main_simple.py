@@ -327,12 +327,18 @@ def _get_rankings(sport_slug: str):
 
 @app.on_event("startup")
 async def startup_scrape():
-    """Warm from disk; initial scrape is triggered on first API access if needed."""
+    """Warm from disk and kick off a fresh scrape on every server startup."""
     init_database()
     load_cache_snapshot()
     _load_reports_store()
     if not _has_persisted_dataset() and cache.teams:
         persist_scrape_result(cache.teams, cache.rankings, cache.last_updated)
+    # Always trigger a fresh ingestion when the server starts so the dataset
+    # is current. The scrape runs in the background and the API stays
+    # responsive while it completes.
+    _initial_scrape_state["triggered"] = True
+    if not cache.is_scraping:
+        asyncio.create_task(scrape_all(run_label="startup_auto"))
 
 
 def _should_trigger_initial_scrape(path: str) -> bool:
@@ -1683,10 +1689,17 @@ async def get_prediction(home_team_id: str, away_team_id: str):
 
 @app.get("/api/v1/reports/")
 @app.get("/api/v1/reports")
-async def get_reports():
+async def get_reports(authorization: Optional[str] = Header(default=None)):
+    # Reports are scoped per signed-in user. Anonymous visitors see nothing,
+    # and signed-in users only see reports they generated themselves.
+    current_user = _get_current_user_optional(authorization)
+    if not current_user:
+        return {"reports": [], "total": 0}
     if _prune_invalid_self_matchup_reports():
         _save_reports_store()
-    return {"reports": REPORTS, "total": len(REPORTS)}
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
+    visible = [r for r in REPORTS if r.get("user_id") == user_id]
+    return {"reports": visible, "total": len(visible)}
 
 
 @app.get("/api/v1/reports/templates/")
@@ -1699,29 +1712,40 @@ async def get_report_templates():
 
 
 @app.get("/api/v1/reports/team/{team_id}/latest")
-async def get_latest_report_for_team(team_id: str):
+async def get_latest_report_for_team(team_id: str, authorization: Optional[str] = Header(default=None)):
+    current_user = _get_current_user_optional(authorization)
+    if not current_user:
+        return {"message": "No reports found for this team"}
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     team = _get_team(team_id)
     if team:
         team_name = team.get("name", "")
-        team_reports = [r for r in REPORTS if team_name in r.get("team_name", "")]
+        team_reports = [
+            r for r in REPORTS
+            if team_name in r.get("team_name", "") and r.get("user_id") == user_id
+        ]
         if team_reports:
             return team_reports[-1]
     return {"message": "No reports found for this team"}
 
 
 @app.get("/api/v1/reports/{report_id}")
-async def get_report(report_id: str):
+async def get_report(report_id: str, authorization: Optional[str] = Header(default=None)):
+    current_user = _get_current_user_optional(authorization)
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = next((r for r in REPORTS if r["id"] == report_id), None)
-    if not report:
-        return {"error": "Report not found"}
+    if not report or report.get("user_id") != user_id:
+        raise HTTPException(status_code=404, detail="Report not found")
     return report
 
 
 @app.get("/api/v1/reports/{report_id}/html")
-async def get_report_html(report_id: str):
+async def get_report_html(report_id: str, authorization: Optional[str] = Header(default=None)):
+    current_user = _get_current_user_optional(authorization)
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = next((r for r in REPORTS if r["id"] == report_id), None)
-    if not report:
-        return {"error": "Report not found"}
+    if not report or report.get("user_id") != user_id:
+        raise HTTPException(status_code=404, detail="Report not found")
     return {"html": f"<html><body><h1>{report['title']}</h1><div>{report.get('content', '')}</div></body></html>"}
 
 
@@ -2109,8 +2133,10 @@ def _generate_report_pdf(report: dict) -> bytes:
 
 @app.get("/api/v1/reports/{report_id}/pdf")
 async def get_report_pdf(report_id: str, authorization: Optional[str] = Header(default=None)):
+    current_user = _get_current_user_optional(authorization)
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = next((r for r in REPORTS if r["id"] == report_id), None)
-    if not report:
+    if not report or report.get("user_id") != user_id:
         return Response(content=b"Report not found", status_code=404)
     current_user = _get_current_user_optional(authorization)
     _log_activity(
@@ -2419,8 +2445,11 @@ async def generate_report(data: Optional[dict] = None, authorization: Optional[s
     )
 
     new_id = _next_report_id()
+    current_user = _get_current_user_optional(authorization)
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = {
         "id": new_id,
+        "user_id": user_id,
         "title": f"{team_name} vs {opp_name} Scouting Report",
         "team_id": team_id,
         "opponent_id": opponent_id,
@@ -2468,7 +2497,6 @@ async def generate_report(data: Optional[dict] = None, authorization: Optional[s
     }
     REPORTS.append(report)
     _save_reports_store()
-    current_user = _get_current_user_optional(authorization)
     _log_activity(
         current_user,
         "generate_report",
@@ -2486,17 +2514,27 @@ async def create_report(data: Optional[dict] = None, authorization: Optional[str
 
 
 @app.put("/api/v1/reports/{report_id}/regenerate")
-async def regenerate_report(report_id: str):
+async def regenerate_report(report_id: str, authorization: Optional[str] = Header(default=None)):
+    current_user = _get_current_user_optional(authorization)
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = next((r for r in REPORTS if r["id"] == report_id), None)
-    if report:
-        report["generated_at"] = str(datetime.datetime.now())
-        report["status"] = "completed"
-        _save_reports_store()
-    return report or {"error": "Report not found"}
+    if not report:
+        return {"error": "Report not found"}
+    if report.get("user_id") != user_id:
+        raise HTTPException(status_code=404, detail="Report not found")
+    report["generated_at"] = str(datetime.datetime.now())
+    report["status"] = "completed"
+    _save_reports_store()
+    return report
 
 
 @app.delete("/api/v1/reports/{report_id}")
-async def delete_report(report_id: str):
+async def delete_report(report_id: str, authorization: Optional[str] = Header(default=None)):
+    current_user = _get_current_user_optional(authorization)
+    user_id = current_user.get("id") if isinstance(current_user, dict) else None
+    target = next((r for r in REPORTS if r["id"] == report_id), None)
+    if not target or target.get("user_id") != user_id:
+        raise HTTPException(status_code=404, detail="Report not found")
     REPORTS[:] = [r for r in REPORTS if r["id"] != report_id]
     _save_reports_store()
     return {"status": "deleted", "id": report_id}

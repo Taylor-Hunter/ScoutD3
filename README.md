@@ -152,12 +152,35 @@ These settings are persisted in local storage and applied to the document root.
 
 ## Deployment
 
-Two supported deployment paths are documented in this repo:
+ScoutD3 is currently deployed on Render's free tier using the
+[`render.yaml`](render.yaml) blueprint, which provisions three services:
 
-- Render: see `render.yaml`
-- VPS with Docker Compose and Nginx: see `docker-compose.prod.yml` and `docs/deployment.md`
+- a managed PostgreSQL database,
+- a Python web service running the FastAPI backend (`scoutd3-backend`),
+- a static site that serves the production Vite build of the frontend (`scoutd3-frontend`).
 
-For the current hosted setup, Render is the quickest managed option. For a same-origin frontend and backend on one domain, the VPS path is cleaner.
+The Python runtime is pinned to 3.11 via a tracked
+[`backend/.python-version`](backend/.python-version) file so that all
+dependencies install from prebuilt wheels rather than compiling native
+code in the build container, and [`backend/requirements.txt`](backend/requirements.txt)
+has been trimmed to only the libraries imported at runtime so free-tier
+builds finish well within their time budget.
+
+A self-hosted alternative is also supported for environments that prefer
+a single origin: see [`docker-compose.prod.yml`](docker-compose.prod.yml)
+and [`docs/deployment.md`](docs/deployment.md). In that setup, Nginx
+serves the frontend and proxies the API on a unified origin, so there is
+no `localhost` versus `127.0.0.1` CORS friction.
+
+## Mobile and Responsive Layout
+
+The frontend is responsive and intended to be usable on phones and
+tablets as well as desktops. Below the `md` Tailwind breakpoint the top
+navigation collapses into a hamburger toggle that opens a stacked
+drawer, the header hides its secondary tagline so sign-in controls stay
+reachable, and wide tables scroll inside their own container instead of
+pushing the page sideways. At tablet width and above, the full
+horizontal navigation and original data-dense layout are restored.
 
 ## Additional Documentation
 

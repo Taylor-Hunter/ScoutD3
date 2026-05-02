@@ -85,6 +85,31 @@ body {
   }
 }
 
+/* Mobile safety net: prevent horizontal page scroll from rogue wide content. */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  /* Allow wide tables to scroll within their container instead of pushing the page. */
+  main table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tighten default page padding on small screens. */
+  main .max-w-7xl,
+  main .max-w-6xl,
+  main .max-w-5xl,
+  main .max-w-4xl {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
 /* Custom component styles */
 .card {
   @apply bg-white shadow rounded-lg;

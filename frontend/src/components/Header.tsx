@@ -19,11 +19,11 @@ const Header: React.FC<HeaderProps> = () => {
               </Link>
             </div>
           </div>
-          <div className="ml-4 flex items-center space-x-4">
-            <div className="text-sm text-gray-500">NCAA Division III Scouting</div>
+          <div className="ml-4 flex items-center space-x-2 sm:space-x-4">
+            <div className="hidden sm:block text-sm text-gray-500">NCAA Division III Scouting</div>
             {isAuthenticated && user ? (
               <>
-                <Link to="/settings" className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors">
+                <Link to="/settings" className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors max-w-[8rem] truncate">
                   {user.username}
                 </Link>
                 <button

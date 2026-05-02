@@ -1690,16 +1690,12 @@ async def get_prediction(home_team_id: str, away_team_id: str):
 @app.get("/api/v1/reports/")
 @app.get("/api/v1/reports")
 async def get_reports(authorization: Optional[str] = Header(default=None)):
-    # Reports are scoped per signed-in user. Anonymous visitors see nothing,
-    # and signed-in users only see reports they generated themselves.
-    current_user = _get_current_user_optional(authorization)
-    if not current_user:
-        return {"reports": [], "total": 0}
+    # Generated reports are visible to anyone (signed in or not) so that the
+    # Reports tab is useful as a shared catalogue. Mutation endpoints below
+    # still enforce ownership.
     if _prune_invalid_self_matchup_reports():
         _save_reports_store()
-    user_id = current_user.get("id") if isinstance(current_user, dict) else None
-    visible = [r for r in REPORTS if r.get("user_id") == user_id]
-    return {"reports": visible, "total": len(visible)}
+    return {"reports": list(REPORTS), "total": len(REPORTS)}
 
 
 @app.get("/api/v1/reports/templates/")
@@ -1713,16 +1709,12 @@ async def get_report_templates():
 
 @app.get("/api/v1/reports/team/{team_id}/latest")
 async def get_latest_report_for_team(team_id: str, authorization: Optional[str] = Header(default=None)):
-    current_user = _get_current_user_optional(authorization)
-    if not current_user:
-        return {"message": "No reports found for this team"}
-    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     team = _get_team(team_id)
     if team:
         team_name = team.get("name", "")
         team_reports = [
             r for r in REPORTS
-            if team_name in r.get("team_name", "") and r.get("user_id") == user_id
+            if team_name in r.get("team_name", "")
         ]
         if team_reports:
             return team_reports[-1]
@@ -1731,20 +1723,16 @@ async def get_latest_report_for_team(team_id: str, authorization: Optional[str] 
 
 @app.get("/api/v1/reports/{report_id}")
 async def get_report(report_id: str, authorization: Optional[str] = Header(default=None)):
-    current_user = _get_current_user_optional(authorization)
-    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = next((r for r in REPORTS if r["id"] == report_id), None)
-    if not report or report.get("user_id") != user_id:
+    if not report:
         raise HTTPException(status_code=404, detail="Report not found")
     return report
 
 
 @app.get("/api/v1/reports/{report_id}/html")
 async def get_report_html(report_id: str, authorization: Optional[str] = Header(default=None)):
-    current_user = _get_current_user_optional(authorization)
-    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = next((r for r in REPORTS if r["id"] == report_id), None)
-    if not report or report.get("user_id") != user_id:
+    if not report:
         raise HTTPException(status_code=404, detail="Report not found")
     return {"html": f"<html><body><h1>{report['title']}</h1><div>{report.get('content', '')}</div></body></html>"}
 
@@ -2133,10 +2121,8 @@ def _generate_report_pdf(report: dict) -> bytes:
 
 @app.get("/api/v1/reports/{report_id}/pdf")
 async def get_report_pdf(report_id: str, authorization: Optional[str] = Header(default=None)):
-    current_user = _get_current_user_optional(authorization)
-    user_id = current_user.get("id") if isinstance(current_user, dict) else None
     report = next((r for r in REPORTS if r["id"] == report_id), None)
-    if not report or report.get("user_id") != user_id:
+    if not report:
         return Response(content=b"Report not found", status_code=404)
     current_user = _get_current_user_optional(authorization)
     _log_activity(

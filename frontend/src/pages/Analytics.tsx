@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ChartBarIcon,
   TrophyIcon,
@@ -208,6 +208,7 @@ interface ScoutingReportData {
 }
 
 const Analytics: React.FC = () => {
+  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedTeamId = searchParams.get('team');
   const [comparisonTeamId, setComparisonTeamId] = useState<string>('');
@@ -424,6 +425,7 @@ const Analytics: React.FC = () => {
     {
       onSuccess: (response) => {
         setComparisonScoutingReport(response.data as ScoutingReportData);
+        queryClient.invalidateQueries({ queryKey: ['reports'] });
       },
       onError: async (err) => {
         const message = await getBlobErrorMessage(err, 'Failed to generate scouting report. Please try again.');

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   DocumentTextIcon,
   ChartBarIcon,
@@ -111,6 +111,7 @@ const statValue = (key: string, value: unknown): string => {
 };
 
 const ScoutingReport: React.FC = () => {
+  const queryClient = useQueryClient();
   const { teamId, opponentId } = useParams<{ teamId: string; opponentId: string }>();
   const [selectedOpponentId, setSelectedOpponentId] = useState<string>(opponentId || '');
   const [reportData, setReportData] = useState<ScoutingReportData | null>(null);
@@ -142,6 +143,7 @@ const ScoutingReport: React.FC = () => {
     {
       onSuccess: (response) => {
         setReportData(response.data);
+        queryClient.invalidateQueries({ queryKey: ['reports'] });
       },
       onError: (error) => {
         console.error('Failed to generate report:', error);

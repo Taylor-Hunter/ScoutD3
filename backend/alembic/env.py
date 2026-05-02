@@ -1,5 +1,4 @@
 # pyright: reportMissingImports=false, reportMissingModuleSource=false, reportAttributeAccessIssue=false
-# pylint: disable=import-error,no-name-in-module
 from __future__ import annotations
 
 from importlib import import_module

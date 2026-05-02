@@ -1689,7 +1689,7 @@ async def get_prediction(home_team_id: str, away_team_id: str):
 
 @app.get("/api/v1/reports/")
 @app.get("/api/v1/reports")
-async def get_reports(authorization: Optional[str] = Header(default=None)):
+async def get_reports():
     # Generated reports are visible to anyone (signed in or not) so that the
     # Reports tab is useful as a shared catalogue. Mutation endpoints below
     # still enforce ownership.
@@ -1708,7 +1708,7 @@ async def get_report_templates():
 
 
 @app.get("/api/v1/reports/team/{team_id}/latest")
-async def get_latest_report_for_team(team_id: str, authorization: Optional[str] = Header(default=None)):
+async def get_latest_report_for_team(team_id: str):
     team = _get_team(team_id)
     if team:
         team_name = team.get("name", "")
@@ -1722,7 +1722,7 @@ async def get_latest_report_for_team(team_id: str, authorization: Optional[str] 
 
 
 @app.get("/api/v1/reports/{report_id}")
-async def get_report(report_id: str, authorization: Optional[str] = Header(default=None)):
+async def get_report(report_id: str):
     report = next((r for r in REPORTS if r["id"] == report_id), None)
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")
@@ -1730,7 +1730,7 @@ async def get_report(report_id: str, authorization: Optional[str] = Header(defau
 
 
 @app.get("/api/v1/reports/{report_id}/html")
-async def get_report_html(report_id: str, authorization: Optional[str] = Header(default=None)):
+async def get_report_html(report_id: str):
     report = next((r for r in REPORTS if r["id"] == report_id), None)
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")

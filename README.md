@@ -2,7 +2,7 @@
 
 ScoutD3 is an NCAA Division III scouting application with a FastAPI backend, a React + Vite frontend, and a PostgreSQL data store. The current application focuses on collecting publicly available team data, showing users the status of that collection, and presenting the results through an accessible web interface.
 
-**Live demo:** <https://scoutd3.onrender.com>
+**Live demo:** <https://scoutd3-frontend.onrender.com>
 
 ## Current Stack
 
@@ -155,7 +155,7 @@ These settings are persisted in local storage and applied to the document root.
 ## Deployment
 
 ScoutD3 is currently deployed on Render's free tier at
-<https://scoutd3.onrender.com> using the [`render.yaml`](render.yaml)
+<https://scoutd3-frontend.onrender.com> using the [`render.yaml`](render.yaml)
 blueprint, which provisions three services:
 
 - a managed PostgreSQL database,

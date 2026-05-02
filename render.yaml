@@ -29,11 +29,11 @@ services:
       - key: DATA_REFRESH_INTERVAL_HOURS
         value: "6"
       - key: CORS_ORIGINS
-        value: https://scoutd3.onrender.com
+        value: https://scoutd3-frontend.onrender.com
 
   - type: web
     runtime: static
-    name: scoutd3
+    name: scoutd3-frontend
     rootDir: frontend
     buildCommand: npm install && npx vite build
     staticPublishPath: dist

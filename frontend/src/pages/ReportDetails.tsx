@@ -136,6 +136,8 @@ const ReportDetails: React.FC = () => {
               </p>
             </div>
 
+            {report.format !== 'Summary' && (
+              <>
             {/* Key Strengths */}
             <div className="bg-white shadow rounded-lg p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Key Strengths</h2>
@@ -180,6 +182,8 @@ const ReportDetails: React.FC = () => {
                 )}
               </ul>
             </div>
+              </>
+            )}
 
             {/* Matchup Analysis */}
             {report.matchup_analysis && (
@@ -207,7 +211,7 @@ const ReportDetails: React.FC = () => {
             )}
 
             {/* Opponent Profile */}
-            {report.opponent_profile && (
+            {report.format !== 'Summary' && report.opponent_profile && (
               <div className="bg-white shadow rounded-lg p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Opponent Profile</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
@@ -20,6 +20,7 @@ interface Team {
 }
 
 import { api } from '../services/api';
+import { useAppSettings } from '../hooks/useAppSettings';
 
 const normalizeSearchText = (value: string): string =>
   value.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -46,6 +47,9 @@ const fetchTeams = async () => {
 const TeamSelection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSport, setSelectedSport] = useState('all');
+  const [selectedConference, setSelectedConference] = useState('all');
+  const [hasAppliedDefaultSport, setHasAppliedDefaultSport] = useState(false);
+  const { settings: appSettings } = useAppSettings();
 
   // Fetch teams data using React Query
   const { data: teamsData, isLoading, error } = useQuery({
@@ -54,6 +58,44 @@ const TeamSelection: React.FC = () => {
   });
 
   const teams: Team[] = teamsData?.teams || [];
+
+  // Get unique sports for the dropdown
+  const availableSports = Array.from(new Set(teams.map(team => team.sport))).sort();
+
+  // Conferences available for the currently selected sport (or all sports)
+  const availableConferences = Array.from(
+    new Set(
+      teams
+        .filter((team) => selectedSport === 'all' || team.sport === selectedSport)
+        .map((team) => team.conference)
+        .filter((conference): conference is string => Boolean(conference))
+    )
+  ).sort();
+
+  // Reset conference filter when it's no longer valid for the selected sport
+  useEffect(() => {
+    if (selectedConference !== 'all' && !availableConferences.includes(selectedConference)) {
+      setSelectedConference('all');
+    }
+  }, [selectedConference, availableConferences]);
+
+  // Pre-select the user's preferred default sport once teams are loaded.
+  // We only do this on the first load so a user's manual selection wins.
+  useEffect(() => {
+    if (hasAppliedDefaultSport || teams.length === 0) {
+      return;
+    }
+    const preferred = appSettings.defaultSport.trim().toLowerCase();
+    if (preferred) {
+      const match = availableSports.find((sport) =>
+        sport.toLowerCase().includes(preferred)
+      );
+      if (match) {
+        setSelectedSport(match);
+      }
+    }
+    setHasAppliedDefaultSport(true);
+  }, [appSettings.defaultSport, availableSports, hasAppliedDefaultSport, teams.length]);
 
   // Filter teams based on search term and sport
   const filteredTeams = teams.filter((team) => {
@@ -70,12 +112,10 @@ const TeamSelection: React.FC = () => {
       );
     
     const matchesSport = selectedSport === 'all' || team.sport === selectedSport;
-    
-    return matchesSearch && matchesSport;
-  });
+    const matchesConference = selectedConference === 'all' || team.conference === selectedConference;
 
-  // Get unique sports for the dropdown
-  const availableSports = Array.from(new Set(teams.map(team => team.sport))).sort();
+    return matchesSearch && matchesSport && matchesConference;
+  });
 
   if (isLoading) {
     return (
@@ -172,6 +212,22 @@ const TeamSelection: React.FC = () => {
                   {availableSports.map((sport) => (
                     <option key={sport} value={sport}>
                       {sport}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Conference filter */}
+              <div className="sm:w-64">
+                <select
+                  value={selectedConference}
+                  onChange={(e) => setSelectedConference(e.target.value)}
+                  className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 text-gray-900 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                >
+                  <option value="all">All Conferences</option>
+                  {availableConferences.map((conference) => (
+                    <option key={conference} value={conference}>
+                      {conference}
                     </option>
                   ))}
                 </select>

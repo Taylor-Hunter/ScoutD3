@@ -1,6 +1,35 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 
 const AUTH_TOKEN_KEY = 'scoutd3.authToken';
+const ANON_SESSION_KEY = 'scoutd3.anonSession';
+
+// Stable per-tab identifier so anonymous reports stay scoped to the
+// browser session that generated them. Uses sessionStorage so that a
+// fresh visit (new tab/window) starts with a clean identity and does
+// not inherit reports generated in a previous session.
+const getAnonSessionId = (): string | null => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  let id = sessionStorage.getItem(ANON_SESSION_KEY);
+  if (!id) {
+    const cryptoObj = (window as any).crypto;
+    if (cryptoObj && typeof cryptoObj.randomUUID === 'function') {
+      id = cryptoObj.randomUUID();
+    } else {
+      id = `anon-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+    sessionStorage.setItem(ANON_SESSION_KEY, id);
+  }
+  return id;
+};
+
+const rotateAnonSessionId = (): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  sessionStorage.removeItem(ANON_SESSION_KEY);
+};
 
 // API Configuration (Vite environment variables)
 const resolveApiBaseUrl = (): string => {
@@ -41,6 +70,10 @@ apiClient.interceptors.request.use(
     const token = typeof window !== 'undefined' ? localStorage.getItem(AUTH_TOKEN_KEY) : null;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    const anonSession = getAnonSessionId();
+    if (anonSession) {
+      config.headers['X-Anon-Session'] = anonSession;
     }
     return config;
   },
@@ -145,6 +178,7 @@ export const api = {
     getInsights: (id: string) => apiClient.get(`/reports/${id}/insights`),
     delete: (id: string) => apiClient.delete(`/reports/${id}`),
     getLatestForTeam: (teamId: string) => apiClient.get(`/reports/team/${teamId}/latest`),
+    clearMine: () => apiClient.delete('/reports/'),
   },
   
   // Data Ingestion endpoints
@@ -185,6 +219,7 @@ export const api = {
 
 // Export the configured axios instance as well for direct use if needed
 export { apiClient };
+export { rotateAnonSessionId };
 export const authTokenStorage = {
   get: () => (typeof window !== 'undefined' ? localStorage.getItem(AUTH_TOKEN_KEY) : null),
   set: (token: string) => {

@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { api } from '../services/api';
+import { getStoredAppSettings } from '../hooks/useAppSettings';
 
 interface ScoutingReportData {
   id: string;
@@ -139,7 +140,7 @@ const ScoutingReport: React.FC = () => {
   // Generate report mutation
   const generateReport = useMutation(
     (data: { teamId: string; opponentId: string; sport: string }) =>
-      api.reports.generate(data),
+      api.reports.generate({ ...data, format: getStoredAppSettings().reportFormat }),
     {
       onSuccess: (response) => {
         setReportData(response.data);

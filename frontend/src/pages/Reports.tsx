@@ -14,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { api } from '../services/api';
+import { useAppSettings, refetchIntervalFor } from '../hooks/useAppSettings';
 
 interface Report {
   id: string;
@@ -95,13 +96,14 @@ const Reports: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSport, setSelectedSport] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
+  const { settings: appSettings } = useAppSettings();
   const queryClient = useQueryClient();
 
   // Fetch reports
   const { data: reportsResponse, isLoading } = useQuery({
     queryKey: ['reports'],
     queryFn: () => api.reports.getAll(),
-    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchInterval: refetchIntervalFor(30000, appSettings.autoRefresh),
   });
 
   // Delete report mutation
@@ -123,7 +125,7 @@ const Reports: React.FC = () => {
       report.team_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       report.opponent_name.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesSport = !selectedSport || report.sport === selectedSport;
+    const matchesSport = !selectedSport || (report.sport || '').toLowerCase().includes(selectedSport.toLowerCase());
     const matchesStatus = !selectedStatus || report.status === selectedStatus;
 
     return matchesSearch && matchesSport && matchesStatus;

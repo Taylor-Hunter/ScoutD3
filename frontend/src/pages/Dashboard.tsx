@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { api } from '../services/api';
+import { useAppSettings, refetchIntervalFor } from '../hooks/useAppSettings';
 
 // API functions  
 const fetchStats = async () => {
@@ -26,6 +27,8 @@ const fetchTeams = async () => {
 };
 
 const Dashboard: React.FC = () => {
+  const { settings: appSettings } = useAppSettings();
+
   // Fetch real data from backend
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['stats'],
@@ -41,7 +44,7 @@ const Dashboard: React.FC = () => {
     queryKey: ['dashboard-scrape-status'],
     queryFn: () => api.system.getScrapeStatus(),
     staleTime: 10000,
-    refetchInterval: 10000,
+    refetchInterval: refetchIntervalFor(10000, appSettings.autoRefresh),
     retry: 1,
   });
 

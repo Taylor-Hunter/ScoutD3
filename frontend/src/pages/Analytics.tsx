@@ -14,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { api } from '../services/api';
+import { getStoredAppSettings } from '../hooks/useAppSettings';
 import { Link } from 'react-router-dom';
 
 const normalizeSearchText = (value: string): string =>
@@ -421,7 +422,8 @@ const Analytics: React.FC = () => {
   const comparisonTeamStats = comparisonTeamStatsResponse?.data;
 
   const generateComparisonReport = useMutation(
-    (payload: { teamId: string; opponentId: string; sport: string }) => api.reports.generate(payload),
+    (payload: { teamId: string; opponentId: string; sport: string }) =>
+      api.reports.generate({ ...payload, format: getStoredAppSettings().reportFormat }),
     {
       onSuccess: (response) => {
         setComparisonScoutingReport(response.data as ScoutingReportData);

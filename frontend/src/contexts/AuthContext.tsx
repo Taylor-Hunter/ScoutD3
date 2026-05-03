@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import { api, authTokenStorage } from '../services/api';
+import { api, authTokenStorage, rotateAnonSessionId } from '../services/api';
 
 type AuthUser = {
   id: number;
@@ -56,6 +56,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const handleAuthSuccess = (payload: any) => {
     authTokenStorage.set(payload.access_token);
     setUser(payload.user);
+    // Note: we do NOT clear reports on login. The owner-filter on the
+    // reports endpoints already hides anonymous (pre-login) reports
+    // from authenticated users, while still letting them see every
+    // report they have generated under this account.
   };
 
   const login = async (username: string, password: string) => {
@@ -85,6 +89,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Clear local session even if backend logout is unavailable.
     } finally {
       authTokenStorage.clear();
+      // Drop the per-tab anonymous identity too so the next visit
+      // starts with a fresh, empty Reports list.
+      rotateAnonSessionId();
       setUser(null);
     }
   };

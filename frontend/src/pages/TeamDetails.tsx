@@ -176,17 +176,23 @@ const TeamDetails: React.FC = () => {
   const normalizedTeamSport = String(team?.sport || '').trim().toLowerCase();
   const recentTeamReports = allReports
     .filter((report) => {
-      const byId = !!teamId && String(report.team_id || '') === String(teamId);
-      if (byId) {
+      const reportTeamId = String(report.team_id || '');
+      const reportOpponentId = String(report.opponent_id || '');
+      const targetId = String(teamId || '');
+
+      // Match by ID on either side of the matchup.
+      if (targetId && (reportTeamId === targetId || reportOpponentId === targetId)) {
         return true;
       }
 
+      // Legacy fallback: match by name + sport when IDs aren't stamped.
       const reportTeamName = String(report.team_name || '').trim().toLowerCase();
+      const reportOpponentName = String(report.opponent_name || '').trim().toLowerCase();
       const reportSport = String(report.sport || '').trim().toLowerCase();
-      const byLegacyNameAndSport = reportTeamName === normalizedTeamName
-        && (!normalizedTeamSport || !reportSport || reportSport === normalizedTeamSport);
+      const sportMatches = !normalizedTeamSport || !reportSport || reportSport === normalizedTeamSport;
+      const nameMatches = reportTeamName === normalizedTeamName || reportOpponentName === normalizedTeamName;
 
-      return byLegacyNameAndSport;
+      return Boolean(normalizedTeamName) && nameMatches && sportMatches;
     })
     .sort((a, b) => {
       const aTime = new Date(a.generated_at).getTime();

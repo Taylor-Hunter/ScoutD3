@@ -4,9 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { CloudArrowUpIcon, ArrowRightIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 import { api } from '../services/api';
+import { useAppSettings, refetchIntervalFor } from '../hooks/useAppSettings';
 
 const AppReadinessBanner: React.FC = () => {
   const location = useLocation();
+  const { settings: appSettings } = useAppSettings();
 
   const { data: statsResponse } = useQuery({
     queryKey: ['system-stats'],
@@ -19,7 +21,7 @@ const AppReadinessBanner: React.FC = () => {
     queryKey: ['scrape-status-banner'],
     queryFn: () => api.system.getScrapeStatus(),
     staleTime: 10000,
-    refetchInterval: 10000,
+    refetchInterval: refetchIntervalFor(10000, appSettings.autoRefresh),
     retry: 1,
   });
 

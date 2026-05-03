@@ -18,6 +18,7 @@ import {
 
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import { useAppSettings } from '../hooks/useAppSettings';
 
 const VISIBLE_ACTIVITY_TYPES = new Set([
   'view_team',
@@ -32,12 +33,17 @@ const VISIBLE_ACTIVITY_TYPES = new Set([
 
 const Settings: React.FC = () => {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { settings: appSettings, update: updateAppSettings } = useAppSettings();
   const [notifyReportComplete, setNotifyReportComplete] = useState(true);
   const [notifyDataUpdates, setNotifyDataUpdates] = useState(true);
   const [notifySystemAlerts, setNotifySystemAlerts] = useState(false);
-  const [defaultSport, setDefaultSport] = useState('Basketball');
-  const [reportFormat, setReportFormat] = useState('Detailed (Recommended)');
-  const [autoRefresh, setAutoRefresh] = useState(true);
+  const defaultSport = appSettings.defaultSport;
+  const reportFormat = appSettings.reportFormat;
+  const autoRefresh = appSettings.autoRefresh;
+  const setDefaultSport = (value: string) => updateAppSettings({ defaultSport: value });
+  const setReportFormat = (value: string) =>
+    updateAppSettings({ reportFormat: value as typeof appSettings.reportFormat });
+  const setAutoRefresh = (value: boolean) => updateAppSettings({ autoRefresh: value });
   const [dataSharing, setDataSharing] = useState('Private');
   const [apiAccess, setApiAccess] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -368,7 +374,6 @@ const Settings: React.FC = () => {
                     <option>Baseball</option>
                     <option>Softball</option>
                     <option>Volleyball</option>
-                    <option>Lacrosse</option>
                   </select>
                 </div>
                 <div>

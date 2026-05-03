@@ -12,15 +12,17 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { api } from '../services/api';
+import { useAppSettings, refetchIntervalFor } from '../hooks/useAppSettings';
 
 const DataIngestion: React.FC = () => {
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
+  const { settings: appSettings } = useAppSettings();
 
   // Fetch system summary
   const { data: summary, refetch: refetchSummary } = useQuery({
     queryKey: ['ingestion-summary'],
     queryFn: () => api.ingestion.comprehensive.getSummary(),
-    refetchInterval: 5000, // Refresh every 5 seconds
+    refetchInterval: refetchIntervalFor(5000, appSettings.autoRefresh),
   });
 
   // Fetch discovery preview
@@ -34,7 +36,7 @@ const DataIngestion: React.FC = () => {
     queryKey: ['job-status', activeJobId],
     queryFn: () => activeJobId ? api.ingestion.comprehensive.getStatus(activeJobId) : null,
     enabled: !!activeJobId,
-    refetchInterval: 2000, // Refresh every 2 seconds
+    refetchInterval: refetchIntervalFor(2000, appSettings.autoRefresh),
   });
 
   // Start full ingestion mutation

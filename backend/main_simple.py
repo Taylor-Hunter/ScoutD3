@@ -1,4 +1,4 @@
-"""
+﻿"""
 ScoutD3 Backend – NCAA Division III Scouting API
 All team data is scraped live from ncaa.com – nothing is hardcoded.
 """
@@ -78,6 +78,35 @@ _initial_scrape_state = {"triggered": False}
 REPORTS_STORE_PATH = Path(__file__).resolve().parent / "data" / "reports_store.json"
 
 
+def _now_iso() -> str:
+    """Return an ISO 8601 timestamp with UTC timezone so the frontend can
+    render it in the viewer's local time via `new Date(...)`.
+    """
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def _normalize_naive_timestamp(value) -> str:
+    """If a stored timestamp lacks timezone info, treat it as UTC (Render's
+    server clock) and re-emit as ISO 8601 so the frontend renders it correctly
+    in the viewer's local time.
+    """
+    if not isinstance(value, str) or not value:
+        return value
+    has_tz = (
+        value.endswith("Z")
+        or value.endswith("z")
+        or "+" in value[10:]
+        or value.count("-") > 2
+    )
+    if has_tz:
+        return value
+    try:
+        parsed = datetime.datetime.fromisoformat(value.replace(" ", "T"))
+    except ValueError:
+        return value
+    return parsed.replace(tzinfo=datetime.timezone.utc).isoformat()
+
+
 def _load_reports_store() -> None:
     REPORTS.clear()
     if not REPORTS_STORE_PATH.exists():
@@ -87,7 +116,15 @@ def _load_reports_store() -> None:
         rows = payload.get("reports", []) if isinstance(payload, dict) else []
         if isinstance(rows, list):
             REPORTS.extend([row for row in rows if isinstance(row, dict)])
-        if _prune_invalid_self_matchup_reports():
+        # Migrate naive timestamps to timezone-aware ISO 8601.
+        migrated = False
+        for row in REPORTS:
+            current = row.get("generated_at")
+            normalized = _normalize_naive_timestamp(current)
+            if normalized != current:
+                row["generated_at"] = normalized
+                migrated = True
+        if _prune_invalid_self_matchup_reports() or migrated:
             _save_reports_store()
     except (OSError, ValueError):
         # Keep runtime alive even if the persisted store is malformed.
@@ -154,6 +191,52 @@ def _require_current_user(authorization: Optional[str] = None):
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
     return user
+
+
+def _normalize_anon_session(anon_session: Optional[str]) -> Optional[str]:
+    if not anon_session or not isinstance(anon_session, str):
+        return None
+    value = anon_session.strip()
+    if not value:
+        return None
+    # Defensive cap so a malicious client can't store unbounded keys.
+    return value[:128]
+
+
+def _report_owner_keys(
+    authorization: Optional[str],
+    anon_session: Optional[str],
+) -> tuple[Optional[str], Optional[str]]:
+    """Resolve the owner identity of an incoming reports request.
+
+    Returns ``(user_id, anon_session_id)``. If the caller is authenticated
+    the first element is set and the second is ``None``. Otherwise the
+    second element holds the per-browser anonymous session id (or
+    ``None`` if no session header was supplied).
+    """
+
+    current_user = _get_current_user_optional(authorization)
+    if isinstance(current_user, dict) and current_user.get("id") is not None:
+        return str(current_user["id"]), None
+    return None, _normalize_anon_session(anon_session)
+
+
+def _report_owned_by(
+    report: dict,
+    user_id: Optional[str],
+    anon_session_id: Optional[str],
+) -> bool:
+    """Return True if the report belongs to the given owner identity."""
+
+    report_user_id = report.get("user_id")
+    report_anon = report.get("anon_session")
+    if user_id is not None:
+        return report_user_id is not None and str(report_user_id) == str(user_id)
+    if anon_session_id is not None:
+        # Anonymous owners can only see reports tagged with their session.
+        return report_user_id is None and report_anon == anon_session_id
+    # No identity at all: nothing is visible.
+    return False
 
 
 def _log_activity(
@@ -377,12 +460,12 @@ async def root():
     return {
         "message": "ScoutD3 Backend API is running!",
         "data_source": "Live NCAA scraping",
-        "timestamp": str(datetime.datetime.now()),
+        "timestamp": _now_iso(),
     }
 
 @app.get("/api/v1/health")
 async def health():
-    return {"status": "healthy", "timestamp": str(datetime.datetime.now())}
+    return {"status": "healthy", "timestamp": _now_iso()}
 
 @app.get("/api/v1/status")
 async def get_status():
@@ -391,7 +474,7 @@ async def get_status():
         "api_version": "2.0.0",
         "data_source": "ncaa.com live scraping",
         "features": ["team_management", "scouting_reports", "analytics", "data_ingestion", "live_scraping"],
-        "timestamp": str(datetime.datetime.now()),
+        "timestamp": _now_iso(),
     }
 
 
@@ -1689,13 +1772,19 @@ async def get_prediction(home_team_id: str, away_team_id: str):
 
 @app.get("/api/v1/reports/")
 @app.get("/api/v1/reports")
-async def get_reports():
-    # Generated reports are visible to anyone (signed in or not) so that the
-    # Reports tab is useful as a shared catalogue. Mutation endpoints below
-    # still enforce ownership.
+async def get_reports(
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    # Reports are scoped to the requesting identity: an authenticated user
+    # sees only the reports they generated, and an anonymous browser sees
+    # only the reports tagged with its X-Anon-Session header. Without an
+    # identity, the list is empty.
     if _prune_invalid_self_matchup_reports():
         _save_reports_store()
-    return {"reports": list(REPORTS), "total": len(REPORTS)}
+    user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
+    visible = [r for r in REPORTS if _report_owned_by(r, user_id, anon_session_id)]
+    return {"reports": visible, "total": len(visible)}
 
 
 @app.get("/api/v1/reports/templates/")
@@ -1708,13 +1797,19 @@ async def get_report_templates():
 
 
 @app.get("/api/v1/reports/team/{team_id}/latest")
-async def get_latest_report_for_team(team_id: str):
+async def get_latest_report_for_team(
+    team_id: str,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
     team = _get_team(team_id)
     if team:
+        user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
         team_name = team.get("name", "")
         team_reports = [
             r for r in REPORTS
             if team_name in r.get("team_name", "")
+            and _report_owned_by(r, user_id, anon_session_id)
         ]
         if team_reports:
             return team_reports[-1]
@@ -1722,16 +1817,32 @@ async def get_latest_report_for_team(team_id: str):
 
 
 @app.get("/api/v1/reports/{report_id}")
-async def get_report(report_id: str):
-    report = next((r for r in REPORTS if r["id"] == report_id), None)
+async def get_report(
+    report_id: str,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
+    report = next(
+        (r for r in REPORTS if r["id"] == report_id and _report_owned_by(r, user_id, anon_session_id)),
+        None,
+    )
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")
     return report
 
 
 @app.get("/api/v1/reports/{report_id}/html")
-async def get_report_html(report_id: str):
-    report = next((r for r in REPORTS if r["id"] == report_id), None)
+async def get_report_html(
+    report_id: str,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
+    report = next(
+        (r for r in REPORTS if r["id"] == report_id and _report_owned_by(r, user_id, anon_session_id)),
+        None,
+    )
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")
     return {"html": f"<html><body><h1>{report['title']}</h1><div>{report.get('content', '')}</div></body></html>"}
@@ -2120,8 +2231,16 @@ def _generate_report_pdf(report: dict) -> bytes:
 
 
 @app.get("/api/v1/reports/{report_id}/pdf")
-async def get_report_pdf(report_id: str, authorization: Optional[str] = Header(default=None)):
-    report = next((r for r in REPORTS if r["id"] == report_id), None)
+async def get_report_pdf(
+    report_id: str,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
+    report = next(
+        (r for r in REPORTS if r["id"] == report_id and _report_owned_by(r, user_id, anon_session_id)),
+        None,
+    )
     if not report:
         return Response(content=b"Report not found", status_code=404)
     current_user = _get_current_user_optional(authorization)
@@ -2147,7 +2266,11 @@ async def get_report_insights(report_id: str):
 
 
 @app.post("/api/v1/reports/generate")
-async def generate_report(data: Optional[dict] = None, authorization: Optional[str] = Header(default=None)):
+async def generate_report(
+    data: Optional[dict] = None,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
     data = data or {}
     # Build report from real scraped data
     team_id = data.get("teamId", data.get("team_id", ""))
@@ -2433,9 +2556,14 @@ async def generate_report(data: Optional[dict] = None, authorization: Optional[s
     new_id = _next_report_id()
     current_user = _get_current_user_optional(authorization)
     user_id = current_user.get("id") if isinstance(current_user, dict) else None
+    anon_session_id = None if user_id else _normalize_anon_session(x_anon_session)
+    report_format_raw = str(data.get("format") or "").strip()
+    report_format = report_format_raw or "Detailed (Recommended)"
     report = {
         "id": new_id,
         "user_id": user_id,
+        "anon_session": anon_session_id,
+        "format": report_format,
         "title": f"{team_name} vs {opp_name} Scouting Report",
         "team_id": team_id,
         "opponent_id": opponent_id,
@@ -2443,7 +2571,7 @@ async def generate_report(data: Optional[dict] = None, authorization: Optional[s
         "opponent_name": opp_name,
         "sport": team.get("sport") or opponent.get("sport") or data.get("sport"),
         "season": _season_label_for_sport(team.get("sport") or opponent.get("sport") or data.get("sport")),
-        "generated_at": str(datetime.datetime.now()),
+        "generated_at": _now_iso(),
         "status": "completed",
         "summary": {
             "team_identity": team_identity,
@@ -2495,31 +2623,64 @@ async def generate_report(data: Optional[dict] = None, authorization: Optional[s
 
 
 @app.post("/api/v1/reports/")
-async def create_report(data: Optional[dict] = None, authorization: Optional[str] = Header(default=None)):
-    return await generate_report(data, authorization)
+async def create_report(
+    data: Optional[dict] = None,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    return await generate_report(data, authorization, x_anon_session)
 
 
 @app.put("/api/v1/reports/{report_id}/regenerate")
-async def regenerate_report(report_id: str, authorization: Optional[str] = Header(default=None)):
-    current_user = _get_current_user_optional(authorization)
-    user_id = current_user.get("id") if isinstance(current_user, dict) else None
+async def regenerate_report(
+    report_id: str,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
     report = next((r for r in REPORTS if r["id"] == report_id), None)
     if not report:
         return {"error": "Report not found"}
-    if report.get("user_id") != user_id:
+    if not _report_owned_by(report, user_id, anon_session_id):
         raise HTTPException(status_code=404, detail="Report not found")
-    report["generated_at"] = str(datetime.datetime.now())
+    report["generated_at"] = _now_iso()
     report["status"] = "completed"
     _save_reports_store()
     return report
 
 
+@app.delete("/api/v1/reports/")
+@app.delete("/api/v1/reports")
+async def clear_my_reports(
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    """Delete every report owned by the calling identity.
+
+    Used by the frontend on login/register and on first visit so a
+    user never sees reports left over from a previous session.
+    """
+
+    user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
+    if user_id is None and anon_session_id is None:
+        return {"status": "ok", "deleted": 0}
+    before = len(REPORTS)
+    REPORTS[:] = [r for r in REPORTS if not _report_owned_by(r, user_id, anon_session_id)]
+    removed = before - len(REPORTS)
+    if removed:
+        _save_reports_store()
+    return {"status": "ok", "deleted": removed}
+
+
 @app.delete("/api/v1/reports/{report_id}")
-async def delete_report(report_id: str, authorization: Optional[str] = Header(default=None)):
-    current_user = _get_current_user_optional(authorization)
-    user_id = current_user.get("id") if isinstance(current_user, dict) else None
+async def delete_report(
+    report_id: str,
+    authorization: Optional[str] = Header(default=None),
+    x_anon_session: Optional[str] = Header(default=None),
+):
+    user_id, anon_session_id = _report_owner_keys(authorization, x_anon_session)
     target = next((r for r in REPORTS if r["id"] == report_id), None)
-    if not target or target.get("user_id") != user_id:
+    if not target or not _report_owned_by(target, user_id, anon_session_id):
         raise HTTPException(status_code=404, detail="Report not found")
     REPORTS[:] = [r for r in REPORTS if r["id"] != report_id]
     _save_reports_store()
@@ -2618,7 +2779,7 @@ async def start_sample_ingestion(num_colleges: int = 10):
         "job_id": job_id,
         "status": "running",
         "phase": "scraping NCAA basketball data",
-        "started_at": str(datetime.datetime.now()),
+        "started_at": _now_iso(),
         "progress_percent": 0,
         "statistics": {"colleges_discovered": 0, "colleges_processed": 0, "teams_created": 0, "games_imported": 0},
         "recent_errors": [],
@@ -2635,7 +2796,7 @@ async def start_full_ingestion():
         "job_id": job_id,
         "status": "running",
         "phase": "scraping all NCAA D3 sports",
-        "started_at": str(datetime.datetime.now()),
+        "started_at": _now_iso(),
         "progress_percent": 0,
         "statistics": {"colleges_discovered": 0, "colleges_processed": 0, "teams_created": 0, "games_imported": 0},
         "recent_errors": [],
@@ -2656,7 +2817,7 @@ async def _real_ingestion(job_id: str, sport_filter):
         job["progress_percent"] = 100
         job["phase"] = "complete"
         job["status"] = "completed"
-        job["completed_at"] = str(datetime.datetime.now())
+        job["completed_at"] = _now_iso()
         job["statistics"]["teams_created"] = result.get("teams", 0)
         job["statistics"]["colleges_discovered"] = _get_dataset_summary()["college_count"]
         job["statistics"]["colleges_processed"] = job["statistics"]["colleges_discovered"]
